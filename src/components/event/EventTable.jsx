@@ -5,7 +5,6 @@ import AvatarCell from "../common/AvatarCell";
 import STTable from "../STTable/STTable";
 
 const EventTable = ({ users, onEdit, imageUrls }) => {
-  console.log(users, "users");
   const highlightMatch = (text, match) => {
     if (!match || !text) return text;
     const regex = new RegExp(`(${match})`, "gi");

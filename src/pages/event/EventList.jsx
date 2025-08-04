@@ -76,7 +76,7 @@ const EvenList = () => {
 
         <div className="flex-1 flex gap-4 sm:justify-end">
           <Search
-            placeholder="Search user name or mobile"
+            placeholder="Search event"
             allowClear
             onChange={(e) => setSearchTerm(e.target.value.toLowerCase())}
             className="max-w-sm"

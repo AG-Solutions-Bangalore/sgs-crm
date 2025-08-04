@@ -125,7 +125,6 @@ const MemberForm = () => {
       if (res.code == 201) {
         message.success(res.message || "Member saved!");
         onFinishForm?.();
-        fetchMembers?.();
       } else {
         message.error(res.message || "Failed to save member.");
       }
@@ -207,17 +206,33 @@ const MemberForm = () => {
 
         <div className="grid grid-cols-3 gap-4">
           <Form.Item
-            label="Full Name"
+            label={
+              <span>
+                Full Name <span className="text-red-500">*</span>
+              </span>
+            }
             name="user_full_name"
             rules={[{ required: true, message: "Please enter full name" }]}
           >
             <Input />
           </Form.Item>
-          <Form.Item label="Date of Birth" name="user_dob">
+          <Form.Item
+            label={
+              <span>
+                DOB <span className="text-red-500">*</span>
+              </span>
+            }
+            rules={[{ required: true, message: "Select DOB" }]}
+            name="user_dob"
+          >
             <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
           </Form.Item>
           <Form.Item
-            label="Mobile Number"
+            label={
+              <span>
+                Mobile Number<span className="text-red-500">*</span>
+              </span>
+            }
             name="user_mobile"
             rules={[
               { required: true, message: "Please enter mobile number" },
@@ -253,7 +268,24 @@ const MemberForm = () => {
               }}
             />
           </Form.Item>
-          <Form.Item label="Email" name="user_email">
+          <Form.Item
+            label={
+              <span>
+                Email <span className="text-red-500">*</span>
+              </span>
+            }
+            name="user_email"
+            rules={[
+              {
+                required: true,
+                message: "Email is required",
+              },
+              {
+                type: "email",
+                message: "Please enter a valid email",
+              },
+            ]}
+          >
             <Input />
           </Form.Item>
 
@@ -284,7 +316,15 @@ const MemberForm = () => {
           <Form.Item label="User Type" name="user_type">
             <Input />
           </Form.Item>
-          <Form.Item label="User Category" name="user_cat">
+          <Form.Item
+            label={
+              <span>
+                User Category <span className="text-red-500">*</span>
+              </span>
+            }
+            rules={[{ required: true, message: "Category is required" }]}
+            name="user_cat"
+          >
             <Input />
           </Form.Item>
 

@@ -16,9 +16,9 @@ body {
 .custom-scroll::-webkit-scrollbar-thumb {
   border-radius: 3px;
 }
-.custom-scroll::-webkit-scrollbar-track {
+/* .custom-scroll::-webkit-scrollbar-track {
   background: transparent;
-}
+} */
 
 /* Ant Menu Item Style - Keep animations and rounding only */
 .custom-menu .ant-menu-item,
@@ -65,7 +65,7 @@ body {
   transition: transform 0.2s ease;
 }
 .ant-table-wrapper .ant-table-thead > tr > th {
-  background-color: #BFDBFE; /* Tailwind blue-300 */
+  background-color: #BFDBFE; 
 }
 
 /* Scrollbar */

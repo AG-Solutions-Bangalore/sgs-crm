@@ -3,29 +3,21 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-import { ConfigProvider, App as AntdApp } from "antd";
 import App from "./App.jsx";
 import { store } from "./store/store.js";
 import "./index.css";
+import AppThemeProvider from "./theme/AppThemeProvider.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ConfigProvider
-      theme={{
-        token: {
-          colorPrimary: "#006666",
-        },
-      }}
-    >
-      <AntdApp>
-        {" "}
-        {/* ✅ this MUST wrap the React tree */}
+    <AppThemeProvider>
+
         <Provider store={store}>
           <BrowserRouter>
             <App />
           </BrowserRouter>
         </Provider>
-      </AntdApp>
-    </ConfigProvider>
+    
+    </AppThemeProvider>
   </React.StrictMode>
 );

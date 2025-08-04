@@ -19,7 +19,6 @@ import dayjs from "dayjs";
 import AvatarCell from "../../components/common/AvatarCell";
 
 const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
-  console.log(eventId);
   const { message } = App.useApp();
   const token = usetoken();
   const [form] = Form.useForm();
@@ -33,6 +32,15 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
     imageSrc: null,
     tempFileName: "",
   });
+  const resetForm = () => {
+    form.setFieldsValue({
+      event_name: "",
+      event_description: "",
+      event_from_date: null,
+      event_to_date: null,
+    });
+    setImageInfo({ file: null, preview: "" });
+  };
 
   const isEditMode = Boolean(eventId);
 
@@ -48,7 +56,6 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
       const imageBase = res.image_url?.find(
         (img) => img.image_for == "Event"
       )?.image_url;
-      console.log(imageBase, "imageBase");
       if (event.event_image && imageBase) {
         setImageInfo({
           file: null,
@@ -70,13 +77,12 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   };
 
   useEffect(() => {
-    if (isEditMode) {
+    if (open && eventId) {
       fetchEvent();
     } else {
-      form.resetFields();
-      setImageInfo({ file: null, preview: "" });
+      resetForm();
     }
-  }, [eventId]);
+  }, [open, eventId]);
 
   const handleSubmit = async (values) => {
     try {
@@ -129,7 +135,6 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
     };
     reader.readAsDataURL(file);
   };
-  console.log(imageInfo.preview, "imageInfo.preview");
   const handleCroppedImage = ({ blob, fileUrl }) => {
     setImageInfo({ file: blob, preview: fileUrl });
     setCropState({ modalVisible: false, imageSrc: null, tempFileName: "" });
@@ -171,8 +176,9 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
             </Form.Item>
             <Form.Item label="Event Image" className="w-full">
               <div className="flex items-center gap-4">
-                <AvatarCell imageSrc={imageInfo.preview} />
-
+                {imageInfo.preview && (
+                  <AvatarCell imageSrc={imageInfo.preview} />
+                )}
                 <input
                   id="event-image-upload"
                   type="file"
@@ -180,7 +186,6 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                   hidden
                   onChange={(e) => {
                     const file = e.target.files?.[0];
-                    console.log("File selected:", file);
                     if (file) openCropper(file);
                   }}
                 />
@@ -237,7 +242,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
 
           <Form.Item className="text-center mt-6">
             <Button type="primary" htmlType="submit" loading={submitLoading}>
-              Save
+              {isEditMode ? "Update" : "Create"}
             </Button>
           </Form.Item>
         </Form>

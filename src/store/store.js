@@ -24,7 +24,7 @@ if (!secretKey) {
 }
 
 const persistConfig = {
-  key: "root",
+  key: "root-sgs",
   storage,
   whitelist: ["auth", "company"],
   transforms,

@@ -16,10 +16,10 @@ export default function Navbar({ collapsed, onToggle }) {
   const imageUrls = useSelector((state) => state?.auth?.userImage);
   const userImagePath = useSelector((state) => state?.auth?.user?.avatar_photo);
   const userBaseUrl = imageUrls.find(
-    (img) => img.image_for === "User"
+    (img) => img.image_for == "User"
   )?.image_url;
   const noImageUrl = imageUrls.find(
-    (img) => img.image_for === "No Image"
+    (img) => img.image_for == "No Image"
   )?.image_url;
   const finalUserImage = userImagePath
     ? `${userBaseUrl}${userImagePath}`

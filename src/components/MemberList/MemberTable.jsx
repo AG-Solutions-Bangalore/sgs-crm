@@ -103,6 +103,7 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
               <Tag
                 color={isActive ? "green" : "red"}
                 icon={isActive ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                className="cursor-pointer"
               >
                 {isActive ? "Active" : "Inactive"}
               </Tag>

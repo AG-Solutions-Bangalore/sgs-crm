@@ -39,6 +39,13 @@ const AppInitializer = ({ children }) => {
         }
 
         const serverVer = statusRes?.version?.version_panel;
+
+        if (statusRes?.code === 201) {
+          dispatch(setCompanyDetails(statusRes?.company_detils));
+          dispatch(setCompanyImage(statusRes?.company_image));
+        } else {
+          console.warn("⚠️ Failed to fetch company details");
+        }
         if (token) {
           dispatch(
             setShowUpdateDialog({
@@ -77,27 +84,7 @@ const AppInitializer = ({ children }) => {
       }
     };
 
-    const CompanyData = async () => {
-      try {
-        if (hasFetchedCompany.current) return;
-        hasFetchedCompany.current = true;
-
-        const companyRes = await trigger({ url: COMPANY_DATA });
-
-        if (companyRes?.code === 200) {
-          const { data, image_url } = companyRes;
-
-          dispatch(setCompanyDetails(data));
-          dispatch(setCompanyImage(image_url));
-        } else {
-          console.warn("⚠️ Failed to fetch company details");
-        }
-      } catch (error) {
-        console.error("❌ Error fetching company data:", error.message);
-      }
-    };
-
-    CompanyData();
+    
 
     validateEnvironment();
   }, [dispatch, navigate]);

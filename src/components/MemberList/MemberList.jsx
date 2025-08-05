@@ -1,4 +1,4 @@
-import { Card, Input, Spin } from "antd";
+import { App, Card, Input, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MEMBER_DATA } from "../../api";
@@ -10,6 +10,8 @@ const { Search } = Input;
 
 const MemberList = ({ title, userTypeFilter }) => {
   const token = usetoken();
+  const { message } = App.useApp();
+
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const { trigger, loading: isMutating } = useApiMutation();
@@ -48,7 +50,7 @@ const MemberList = ({ title, userTypeFilter }) => {
       }
     } catch (error) {
       console.error("Error updating status:", error);
-      message.error("Error updating user status.");
+      message.error(error.message || "Error updating user status.");
     }
   };
   const fetchUser = async () => {
@@ -85,8 +87,6 @@ const MemberList = ({ title, userTypeFilter }) => {
     navigate(`/members/edit/${user.id}`);
   };
 
-
-
   const filteredUsers = users
     .map((user) => {
       const flatString = Object.values(user)
@@ -113,7 +113,7 @@ const MemberList = ({ title, userTypeFilter }) => {
         </div>
       </div>
 
-      <div className="min-h-[32rem]">
+      <div className="min-h-[27rem]">
         {isMutating ? (
           <div className="flex justify-center py-20">
             <Spin size="large" />

@@ -30,6 +30,7 @@ import UserForm from "./pages/user/UserForm";
 import UserList from "./pages/user/UserList";
 import WebsiteEnquiry from "./pages/websiteenquiry/WebsiteEnquiry";
 import MemberForm from "./components/MemberList/MemberForm";
+import CoupleMembersPage from "./pages/couple/CoupleMembersPage";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
                 <Route path="/home" element={<Dashbord />} />
                 <Route path="/event" element={<EvenList />} />
                 <Route path="/life-member" element={<LifeMembersPage />} />
+                <Route path="/couple-member" element={<CoupleMembersPage />} />
                 <Route
                   path="/members/edit/:memberId"
                   element={<MemberForm />}

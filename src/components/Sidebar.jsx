@@ -27,7 +27,11 @@ const getMenuItems = (collapsed) => {
 
   const managementChildren = [
     { key: "/life-member", icon: <LockOutlined />, label: "Life Membership" },
-    { key: "/", icon: <SolutionOutlined />, label: "Couple" },
+    {
+      key: "/couple-member",
+      icon: <SolutionOutlined />,
+      label: "Couple Membership",
+    },
     { key: "/", icon: <CarOutlined />, label: "Trust" },
   ];
   const reportItemsChildren = [
@@ -42,9 +46,9 @@ const getMenuItems = (collapsed) => {
           label: "Life Membership",
         },
         {
-          key: "/",
+          key: "/couple-member",
           icon: <ProfileOutlined />,
-          label: "Couple",
+          label: "Couple Membership",
         },
         {
           key: "/",
@@ -146,13 +150,13 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
       {/* Header bg-[#006666]*/}
       <div className="flex items-center justify-center h-14 px-4 bg-blue-50">
         <motion.img
-          src={collapsed ? logo1 : finalUserImage}
+          src={collapsed ? finalUserImage : finalUserImage}
           alt="Logo"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
           className={`object-contain transition-all duration-300 ${
-            collapsed ? "w-8" : "w-28"
+            collapsed ? "w-8" : "w-28 h-12"
           }`}
         />
 
@@ -237,7 +241,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 01-08-2025
+                    Updated on: 05-08-2025
                   </div>
                 </div>
               }

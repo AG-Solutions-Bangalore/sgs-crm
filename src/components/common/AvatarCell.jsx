@@ -1,4 +1,3 @@
-import { UserOutlined } from "@ant-design/icons";
 import { Avatar, Spin } from "antd";
 import { useState, useMemo } from "react";
 
@@ -13,6 +12,8 @@ const AvatarCell = ({ imageSrc }) => {
       : imageSrc;
   }, [imageSrc]);
 
+  if (!avatarUrl) return null; 
+
   return (
     <div
       className="flex justify-center items-center"
@@ -22,7 +23,6 @@ const AvatarCell = ({ imageSrc }) => {
       <Avatar
         size={38}
         src={avatarUrl}
-        icon={<UserOutlined />}
         style={loading ? { display: "none" } : {}}
         onLoad={() => setLoading(false)}
       />

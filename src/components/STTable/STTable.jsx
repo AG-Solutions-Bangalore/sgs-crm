@@ -1,6 +1,6 @@
 import { Table } from "antd";
 
-const STTable = ({
+const SGSTable = ({
   data = [],
   columns = [],
   rowKey = "id",
@@ -22,4 +22,4 @@ const STTable = ({
   );
 };
 
-export default STTable;
+export default SGSTable;

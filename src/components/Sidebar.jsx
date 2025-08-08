@@ -14,7 +14,7 @@ import { Alert, Menu } from "antd";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import logo1 from "../assets/logo-1.png";
 import { setShowUpdateDialog } from "../store/auth/versionSlice";
 import useFinalUserImage from "./common/Logo";
@@ -22,9 +22,18 @@ import useFinalUserImage from "./common/Logo";
 const getMenuItems = (collapsed) => {
   const dashboardItems = [
     { key: "/home", icon: <HomeOutlined />, label: "Dashboard" },
-    { key: "/event", icon: <TagsOutlined />, label: "Event" },
+    { key: "/new-registery", icon: <TagsOutlined />, label: "New Registery" },
   ];
 
+  const eventChildren = [
+    { key: "/event", icon: <TagsOutlined />, label: "Event" },
+    {
+      key: "/",
+      icon: <SolutionOutlined />,
+      label: "Event Registery",
+    },
+    { key: "/", icon: <CarOutlined />, label: "Event Tracker" },
+  ];
   const managementChildren = [
     { key: "/life-member", icon: <LockOutlined />, label: "Life Membership" },
     {
@@ -63,6 +72,12 @@ const getMenuItems = (collapsed) => {
     return [
       ...dashboardItems,
       {
+        key: "sub",
+        icon: <MailOutlined />,
+        label: <span id="report-scroll-anchor">Event</span>,
+        children: eventChildren,
+      },
+      {
         key: "sub1",
         icon: <MailOutlined />,
         label: "Management",
@@ -71,7 +86,7 @@ const getMenuItems = (collapsed) => {
       {
         key: "sub2",
         icon: <BarChartOutlined />,
-        label: "Report",
+        label: <span id="report-scroll-anchor">Report</span>,
         children: reportItemsChildren,
       },
     ];
@@ -97,12 +112,24 @@ const getMenuItems = (collapsed) => {
     },
     {
       type: "group",
+      label: "Event",
+      children: [
+        {
+          key: "sub",
+          icon: <MailOutlined />,
+          label: <span id="report-scroll-anchor">Event</span>,
+          children: eventChildren,
+        },
+      ],
+    },
+    {
+      type: "group",
       label: "Report",
       children: [
         {
           key: "sub2",
           icon: <BarChartOutlined />,
-          label: "Report",
+          label: <span id="report-scroll-anchor">Report</span>,
           children: reportItemsChildren,
         },
       ],
@@ -111,8 +138,16 @@ const getMenuItems = (collapsed) => {
 };
 
 export default function Sidebar({ collapsed, isMobile = false, onClose }) {
-  const [selectedKeys, setSelectedKeys] = useState([""]);
-  const [openKeys, setOpenKeys] = useState([""]);
+  const location = useLocation();
+  const selectedKeys = [location.pathname];
+  const getOpenKeysFromPath = (path) => {
+    if (path.startsWith("/report-")) return ["sub2"];
+    return [];
+  };
+
+  const [openKeys, setOpenKeys] = useState(() =>
+    getOpenKeysFromPath(location.pathname)
+  );
   const naviagte = useNavigate();
   const items = getMenuItems(collapsed);
   const dispatch = useDispatch();
@@ -137,20 +172,48 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
       })
     );
   };
-  const rootSubmenuKeys = ["sub1", "sub2"];
+  const rootSubmenuKeys = ["sub", "sub1", "sub2"];
+  useEffect(() => {
+    if (openKeys.includes("sub2")) {
+      const anchor = document.getElementById("report-scroll-anchor");
+      const scrollContainer = document.querySelector(".scrollbar-custom");
+
+      if (anchor && scrollContainer) {
+        let offset = 0;
+        let el = anchor;
+
+        while (el && el !== scrollContainer) {
+          offset += el.offsetTop;
+          el = el.offsetParent;
+        }
+
+        scrollContainer.scrollTo({
+          top: offset - 10,
+          behavior: "smooth",
+        });
+        setTimeout(() => {
+          scrollContainer.scrollTo({
+            top: offset - 10,
+            behavior: "smooth",
+          });
+        }, 200);
+      } else {
+        console.warn("⚠️ Could not find anchor or scroll container.");
+      }
+    }
+  }, [openKeys]);
 
   return (
     <motion.aside
       initial={{ width: collapsed ? 95 : 260 }}
       animate={{ width: collapsed ? 95 : 260 }}
       transition={{ duration: 0.3 }}
-      className={`h-full bg-white shadow-xl rounded-r-2xl overflow-hidden flex flex-col font-[Inter] transition-all duration-300
+      className={`h-full bg-white shadow-xl  overflow-hidden flex flex-col font-[Inter] transition-all duration-300
         ${isMobile ? "fixed z-50 h-screen" : "relative"}`}
     >
-      {/* Header bg-[#006666]*/}
-      <div className="flex items-center justify-center h-14 px-4 bg-blue-50">
+      <div className="flex items-center justify-center h-14 px-4 bg-[#e6f2f2]">
         <motion.img
-          src={collapsed ? finalUserImage : finalUserImage}
+          src={collapsed ? logo1 : finalUserImage}
           alt="Logo"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -178,7 +241,6 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
           items={items}
           openKeys={openKeys}
           selectedKeys={selectedKeys}
-          // onOpenChange={(keys) => setOpenKeys(keys)}
           onOpenChange={(keys) => {
             const latestOpenKey = keys.find(
               (key) => openKeys.indexOf(key) === -1
@@ -190,14 +252,12 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
             }
           }}
           onClick={({ key, keyPath }) => {
-            setSelectedKeys([key]);
             if (isMobile && onClose) {
               onClose();
             }
             if (keyPath.length === 1) {
               setOpenKeys([]);
             }
-
             naviagte(key);
           }}
           className="custom-menu"
@@ -209,7 +269,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-xs text-gray-500  text-center border-t border-blue-600 bg-blue-50"
+          className="text-xs text-gray-500  text-center border-t border-[#006666] bg-[#e6f2f2]"
         >
           {showDialog ? (
             <div
@@ -241,7 +301,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 05-08-2025
+                    Updated on: 08-08-2025
                   </div>
                 </div>
               }

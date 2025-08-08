@@ -31,6 +31,8 @@ import UserList from "./pages/user/UserList";
 import WebsiteEnquiry from "./pages/websiteenquiry/WebsiteEnquiry";
 import MemberForm from "./components/MemberList/MemberForm";
 import CoupleMembersPage from "./pages/couple/CoupleMembersPage";
+import NewRegisterationList from "./pages/newRegisteration/NewRegsitery";
+import NewRegisterationForm from "./pages/newRegisteration/NewRegisterationForm";
 
 function App() {
   return (
@@ -50,6 +52,19 @@ function App() {
               <Routes>
                 <Route path="/home" element={<Dashbord />} />
                 <Route path="/event" element={<EvenList />} />
+                <Route
+                  path="/new-registery"
+                  element={<NewRegisterationList />}
+                />
+                <Route
+                  path="/new-registery-form"
+                  element={<NewRegisterationForm />}
+                />
+                <Route
+                  path="/new-registery-form/:newId"
+                  element={<NewRegisterationForm />}
+                />
+                {/* ////////////////////// */}
                 <Route path="/life-member" element={<LifeMembersPage />} />
                 <Route path="/couple-member" element={<CoupleMembersPage />} />
                 <Route

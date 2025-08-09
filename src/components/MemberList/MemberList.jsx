@@ -1,7 +1,7 @@
 import { App, Card, Input, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MEMBER_DATA } from "../../api";
+import { MEMBER_DATA, UPDATE_USER_STATUS } from "../../api";
 import usetoken from "../../api/usetoken";
 import { useApiMutation } from "../../hooks/useApiMutation";
 import MemberTable from "./MemberTable";
@@ -9,7 +9,6 @@ import MemberTable from "./MemberTable";
 const { Search } = Input;
 
 const MemberList = ({ title, userTypeFilter }) => {
-  const token = usetoken();
   const { message } = App.useApp();
 
   const navigate = useNavigate();
@@ -20,48 +19,15 @@ const MemberList = ({ title, userTypeFilter }) => {
     userImageBase: "",
     noImage: "",
   });
-  const handleToggleStatus = async (user) => {
-    console.log(user, "user");
-    try {
-      const newStatus =
-        user.user_status == "active" || user.user_status == true
-          ? "false"
-          : "true";
-      console.log(newStatus);
-      const res = await trigger({
-        url: `${MEMBER_DATA}/${user.id}/status`,
-        method: "patch",
-        data: { user_status: newStatus },
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
 
-      if (res?.code === 200 || res?.code === 201) {
-        const updatedUsers = users.map((u) =>
-          u.id === user.id ? { ...u, user_status: newStatus } : u
-        );
-        setUsers(updatedUsers);
-        message.success(
-          `User marked as ${newStatus == "active" ? "Active" : "Inactive"}`
-        );
-      } else {
-        message.error("Failed to update user status.");
-      }
-    } catch (error) {
-      console.error("Error updating status:", error);
-      message.error(error.message || "Error updating user status.");
-    }
-  };
   const fetchUser = async () => {
     const res = await trigger({
       url: MEMBER_DATA,
-      headers: { Authorization: `Bearer ${token}` },
     });
-
+    console.log(res.data);
     if (Array.isArray(res.data)) {
       const filtered = res.data.filter(
-        (user) => user.user_type == userTypeFilter
+        (user) => user.user_member_type == userTypeFilter
       );
       setUsers(filtered);
 
@@ -82,7 +48,30 @@ const MemberList = ({ title, userTypeFilter }) => {
   useEffect(() => {
     fetchUser();
   }, [userTypeFilter]);
+  const handleToggleStatus = async (user) => {
+    try {
+      const newStatus = user.is_active == "active" ? "inactive" : "active";
+      console.log(newStatus);
+      const res = await trigger({
+        url: `${UPDATE_USER_STATUS}/${user.id}`,
+        method: "put",
+        data: { is_active: newStatus },
+      });
 
+      if (res?.code === 201) {
+        message.success(
+          res.message ||
+            `User marked as ${newStatus == "active" ? "Active" : "Inactive"}`
+        );
+        fetchUser();
+      } else {
+        message.error(res.message || "Failed to update user status.");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      message.error(error.message || "Error updating user status.");
+    }
+  };
   const handleEdit = (user) => {
     navigate(`/members/edit/${user.id}`);
   };

@@ -12,21 +12,20 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { MEMBER_DATA } from "../../api";
-import usetoken from "../../api/usetoken";
+import { useNavigate, useParams } from "react-router-dom";
+import { REGESTRATION_DATA } from "../../api";
 import AvatarCell from "../../components/common/AvatarCell";
 import CardHeader from "../../components/common/CardHeader";
 import CropImageModal from "../../components/common/CropImageModal";
-import { useApiMutation } from "../../hooks/useApiMutation";
 import membershipTypes from "../../components/json/membershipTypes.json";
+import { useApiMutation } from "../../hooks/useApiMutation";
 const NewRegisterationForm = () => {
   const { newId } = useParams();
   const { message } = App.useApp();
-  const token = usetoken();
   const [form] = Form.useForm();
   const [initialData, setInitialData] = useState({});
   const { trigger: fetchTrigger } = useApiMutation();
+  const navigate = useNavigate();
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
   const [userImageInfo, setUserImageInfo] = useState({
     file: null,
@@ -48,8 +47,7 @@ const NewRegisterationForm = () => {
   const fetchMember = async () => {
     try {
       const res = await fetchTrigger({
-        url: `${MEMBER_DATA}/${newId}`,
-        headers: { Authorization: `Bearer ${token}` },
+        url: `${REGESTRATION_DATA}/${newId}`,
       });
       if (!res?.data) return;
       const member = res.data;
@@ -58,9 +56,6 @@ const NewRegisterationForm = () => {
       const userImageBase = res.image_url?.find(
         (img) => img.image_for == "User"
       )?.image_url;
-      const spouseImageBase = res.image_url?.find(
-        (img) => img.image_for == "Spouse"
-      )?.image_url;
 
       if (member.user_image && userImageBase) {
         setUserImageInfo({
@@ -68,10 +63,10 @@ const NewRegisterationForm = () => {
           preview: `${userImageBase}${member.user_image}`,
         });
       }
-      if (member.spouse_image && spouseImageBase) {
+      if (member.spouse_image && userImageBase) {
         setSpouseImageInfo({
           file: null,
-          preview: `${spouseImageBase}${member.spouse_image}`,
+          preview: `${userImageBase}${member.spouse_image}`,
         });
       }
 
@@ -84,7 +79,7 @@ const NewRegisterationForm = () => {
       });
     } catch (err) {
       console.error("Fetch error:", err);
-      message.error("Failed to load member.");
+      message.error(error.response.data.message || "Something went wrong.");
     }
   };
 
@@ -135,21 +130,21 @@ const NewRegisterationForm = () => {
         formData.append("spouse_image", spouseImageInfo.file);
       }
       const res = await submitTrigger({
-        url: `${MEMBER_DATA}/${newId}?_method=PUT`,
+        url: `${REGESTRATION_DATA}/${newId}?_method=PUT`,
         method: "post",
         data: formData,
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
+      console.log(res, "res");
       if (res.code == 201) {
-        message.success(res.message || "Member Updated!");
+        message.success(res.message || "Registration Updated!");
+        navigate("/new-registration-list");
       } else {
-        message.error(res.message || "Failed to save member.");
+        message.error(res.message || "Failed to save registration.");
       }
     } catch (error) {
-      console.error("Submit error:", error);
       message.error(error.response.data.message || "Something went wrong.");
     }
   };

@@ -11,15 +11,24 @@ export const PANEL_SEND_PASSWORD = `/panel-send-password`;
 //PANEL_CHANGE_PASSWORD
 export const PANEL_CHANGE_PASSWORD = `/panel-change-password`;
 //Event
-export const EVENT_DATA = `/event`;
-//MEMBER
-export const MEMBER_DATA = `/member`;
+export const EVENT_DATA = `/event-register`;
 
-
-
-
-
-
+//REGESTRATION_DATA
+export const REGESTRATION_DATA = `/member`;
+//CONVERT_NEW_REGISTRATION_TO_MEMEBER
+export const CONVERT_NEW_REGISTRATION_TO_MEMEBER = `/panel-convert-new-registration-to-member`;
+//MEMBER_DATA
+export const MEMBER_DATA = `/panel-fetch-users-list`;
+//MEMBER_DATA
+export const GET_MEMBER_BY_ID = `/panel-fetch-users-by-id`;
+//MEMBER_DATA
+export const UPDATE_MEMBER = `/panel-update-users`;
+//MEMBER_DATA
+export const UPDATE_USER_STATUS = `/panel-update-users-status`;
+//PAYMENT_MODE
+export const PAYMENT_MODE = `/panel-fetch-payment-mode`;
+//EVENT_TRACK
+export const EVENT_TRACK = `/event-member-track`;
 
 // -----------------Old------------------
 //PROFILE

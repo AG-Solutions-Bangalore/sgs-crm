@@ -1,4 +1,4 @@
-import { Avatar, Spin } from "antd";
+import { Avatar, Spin, Image } from "antd";
 import { useState, useMemo } from "react";
 
 const AvatarCell = ({ imageSrc }) => {
@@ -12,8 +12,7 @@ const AvatarCell = ({ imageSrc }) => {
       : imageSrc;
   }, [imageSrc]);
 
-  if (!avatarUrl) return null; 
-
+  if (!avatarUrl) return null;
   return (
     <div
       className="flex justify-center items-center"
@@ -22,9 +21,15 @@ const AvatarCell = ({ imageSrc }) => {
       {loading && <Spin size="small" />}
       <Avatar
         size={38}
-        src={avatarUrl}
         style={loading ? { display: "none" } : {}}
-        onLoad={() => setLoading(false)}
+        src={
+          <Image
+            src={avatarUrl}
+            preview={false}
+            onLoad={() => setLoading(false)}
+            onError={() => setLoading(false)}
+          />
+        }
       />
     </div>
   );

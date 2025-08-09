@@ -6,53 +6,67 @@ import {
   DatePicker,
   Form,
   Input,
-  Space,
+  Select,
   Switch,
+  Upload,
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { MEMBER_DATA } from "../../api";
-import usetoken from "../../api/usetoken";
+import { useNavigate, useParams } from "react-router-dom";
+import { REGESTRATION_DATA } from "../../api";
 import AvatarCell from "../../components/common/AvatarCell";
+import CardHeader from "../../components/common/CardHeader";
 import CropImageModal from "../../components/common/CropImageModal";
+import membershipTypes from "../../components/json/membershipTypes.json";
 import { useApiMutation } from "../../hooks/useApiMutation";
-import { useParams } from "react-router-dom";
-import { Select } from "antd";
-const MemberForm = () => {
-  const { memberId } = useParams();
+const NewRegisterationForm = () => {
+  const { newId } = useParams();
   const { message } = App.useApp();
-  const token = usetoken();
   const [form] = Form.useForm();
   const [initialData, setInitialData] = useState({});
   const { trigger: fetchTrigger } = useApiMutation();
+  const navigate = useNavigate();
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
-
-  const [imageInfo, setImageInfo] = useState({ file: null, preview: "" });
+  const [userImageInfo, setUserImageInfo] = useState({
+    file: null,
+    preview: "",
+  });
+  const [spouseImageInfo, setSpouseImageInfo] = useState({
+    file: null,
+    preview: "",
+  });
   const [cropState, setCropState] = useState({
     modalVisible: false,
     imageSrc: null,
     tempFileName: "",
+    target: "",
   });
 
-  const isEditMode = Boolean(memberId);
+  const isEditMode = Boolean(newId);
 
   const fetchMember = async () => {
     try {
       const res = await fetchTrigger({
-        url: `${MEMBER_DATA}/${memberId}`,
-        headers: { Authorization: `Bearer ${token}` },
+        url: `${REGESTRATION_DATA}/${newId}`,
       });
       if (!res?.data) return;
       const member = res.data;
       setInitialData(member);
 
-      const imageBase = res.image_url?.find(
+      const userImageBase = res.image_url?.find(
         (img) => img.image_for == "User"
       )?.image_url;
-      if (member.user_image && imageBase) {
-        setImageInfo({
+
+      if (member.user_image && userImageBase) {
+        setUserImageInfo({
           file: null,
-          preview: `${imageBase}${member.user_image}`,
+          preview: `${userImageBase}${member.user_image}`,
+        });
+      }
+      if (member.spouse_image && userImageBase) {
+        setSpouseImageInfo({
+          file: null,
+          preview: `${userImageBase}${member.spouse_image}`,
         });
       }
 
@@ -65,7 +79,7 @@ const MemberForm = () => {
       });
     } catch (err) {
       console.error("Fetch error:", err);
-      message.error("Failed to load member.");
+      message.error(error.response.data.message || "Something went wrong.");
     }
   };
 
@@ -74,24 +88,28 @@ const MemberForm = () => {
       fetchMember();
     } else {
       form.resetFields();
-      setImageInfo({ file: null, preview: "" });
     }
-  }, [memberId]);
-
+  }, [newId]);
   const handleSubmit = async (values) => {
     try {
       const formData = new FormData();
-      formData.append("user_full_name", values.user_full_name || "");
+      formData.append("user_full_name", values.user_full_name?.trim() || "");
       formData.append(
         "user_dob",
         values.user_dob ? values.user_dob.format("YYYY-MM-DD") : ""
       );
-      formData.append("user_mobile", values.user_mobile || "");
-      formData.append("user_whatsapp", values.user_whatsapp || "");
-      formData.append("user_email", values.user_email || "");
-      formData.append("user_add", values.user_add || "");
-      formData.append("user_spouse_name", values.user_spouse_name || "");
-      formData.append("user_spouse_mobile", values.user_spouse_mobile || "");
+      formData.append("user_mobile", values.user_mobile?.trim() || "");
+      formData.append("user_whatsapp", values.user_whatsapp?.trim() || "");
+      formData.append("user_email", values.user_email?.trim() || "");
+      formData.append("user_add", values.user_add?.trim() || "");
+      formData.append(
+        "user_spouse_name",
+        values.user_spouse_name?.trim() || ""
+      );
+      formData.append(
+        "user_spouse_mobile",
+        values.user_spouse_mobile?.trim() || ""
+      );
       formData.append(
         "user_spouse_dob",
         values.user_spouse_dob
@@ -100,110 +118,95 @@ const MemberForm = () => {
       );
       formData.append("user_type", values.user_type || "");
       formData.append("user_cat", values.user_cat || "");
-      formData.append("user_status", values.user_status || "");
-      formData.append("spouse_image", values.spouse_image || "");
-      formData.append("is_active", values.is_active ? "true" : "false");
-
-      if (imageInfo.file) {
-        formData.append("user_image", imageInfo.file);
-      } else {
-        formData.append("user_image", "");
+      formData.append(
+        "user_status",
+        values.user_status ? "active" : "inactive"
+      );
+      if (userImageInfo.file) {
+        formData.append("user_image", userImageInfo.file);
       }
 
+      if (spouseImageInfo.file) {
+        formData.append("spouse_image", spouseImageInfo.file);
+      }
       const res = await submitTrigger({
-        url: isEditMode
-          ? `${MEMBER_DATA}/${memberId}?_method=PUT`
-          : MEMBER_DATA,
+        url: `${REGESTRATION_DATA}/${newId}?_method=PUT`,
         method: "post",
         data: formData,
         headers: {
-          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
-
+      console.log(res, "res");
       if (res.code == 201) {
-        message.success(res.message || "Member saved!");
-        onFinishForm?.();
+        message.success(res.message || "Registration Updated!");
+        navigate("/new-registration-list");
       } else {
-        message.error(res.message || "Failed to save member.");
+        message.error(res.message || "Failed to save registration.");
       }
     } catch (error) {
-      console.error("Submit error:", error);
-      message.error("Something went wrong.");
+      message.error(error.response.data.message || "Something went wrong.");
     }
   };
 
-  const openCropper = (file) => {
+  const openCropper = (file, target) => {
     const reader = new FileReader();
     reader.onload = () => {
       setCropState({
         modalVisible: true,
         imageSrc: reader.result,
         tempFileName: file.name,
+        target,
       });
     };
     reader.readAsDataURL(file);
   };
 
   const handleCroppedImage = ({ blob, fileUrl }) => {
-    setImageInfo({ file: blob, preview: fileUrl });
-    setCropState({ modalVisible: false, imageSrc: null, tempFileName: "" });
+    console.log(blob, "blob");
+    const file = new File([blob], cropState.tempFileName || "image.jpg", {
+      type: blob.type,
+    });
+    console.log(file, "file");
+    if (cropState.target == "user") {
+      setUserImageInfo({ file, preview: fileUrl });
+    } else if (cropState.target == "spouse") {
+      setSpouseImageInfo({ file, preview: fileUrl });
+    }
+
+    setCropState({
+      modalVisible: false,
+      imageSrc: null,
+      tempFileName: "",
+      target: "",
+    });
   };
 
   return (
-    <Card>
-      <h2 className="text-xl font-semibold text-blue-600 mb-4">
-        {isEditMode ? "Update Member" : "Create Member"}
-      </h2>
-      <Form
-        form={form}
-        initialValues={initialData}
-        layout="vertical"
-        onFinish={handleSubmit}
-        requiredMark={false}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-          }
-        }}
+    <Form
+      form={form}
+      initialValues={initialData}
+      layout="vertical"
+      onFinish={handleSubmit}
+      requiredMark={false}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+        }
+      }}
+    >
+      <Card
+        title={<CardHeader title="Update New Registration" />}
+        extra={
+          <Form.Item
+            name="user_status"
+            valuePropName="checked"
+            style={{ marginBottom: "0px" }}
+          >
+            <Switch />
+          </Form.Item>
+        }
       >
-        <Space className="mb-4 w-full justify-between" direction="horizontal">
-          <>
-            <div className="flex flex-col items-center gap-2">
-              <AvatarCell imageSrc={imageInfo.preview} />
-
-              <input
-                id="member-image-upload"
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) openCropper(file);
-                }}
-              />
-
-              <Button
-                icon={<UploadOutlined />}
-                onClick={() => {
-                  document.getElementById("member-image-upload")?.click();
-                }}
-              >
-                Upload Image
-              </Button>
-            </div>
-
-            <Form.Item
-              label="Active"
-              name="user_status"
-              valuePropName="checked"
-            >
-              <Switch />
-            </Form.Item>
-          </>
-        </Space>
-
         <div className="grid grid-cols-3 gap-4">
           <Form.Item
             label={
@@ -214,7 +217,7 @@ const MemberForm = () => {
             name="user_full_name"
             rules={[{ required: true, message: "Please enter full name" }]}
           >
-            <Input />
+            <Input maxLength={20} autoFocus />
           </Form.Item>
           <Form.Item
             label={
@@ -286,11 +289,10 @@ const MemberForm = () => {
               },
             ]}
           >
-            <Input />
+            <Input maxLength={50} />
           </Form.Item>
-
           <Form.Item label="Spouse Name" name="user_spouse_name">
-            <Input />
+            <Input maxLength={50} />
           </Form.Item>
           <Form.Item
             label="Spouse Mobile"
@@ -313,8 +315,18 @@ const MemberForm = () => {
           <Form.Item label="Spouse DOB" name="user_spouse_dob">
             <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
           </Form.Item>
-          <Form.Item label="User Type" name="user_type">
-            <Input />
+          <Form.Item
+            label="User Type"
+            name="user_type"
+            rules={[{ required: true, message: "Please select user type" }]}
+          >
+            <Select placeholder="Select membership type" allowClear>
+              {membershipTypes.map((type) => (
+                <Option key={type.value} value={type.value}>
+                  {type.label}
+                </Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item
             label={
@@ -327,8 +339,48 @@ const MemberForm = () => {
           >
             <Input />
           </Form.Item>
-
-          <Form.Item label="Address" name="user_add" className="col-span-2">
+          <Form.Item name="user_image" label="Image">
+            <div className="flex items-center gap-4">
+              <AvatarCell imageSrc={userImageInfo.preview} />{" "}
+              <div className="flex-1">
+                <Upload
+                  showUploadList={false}
+                  accept="image/*"
+                  beforeUpload={(file) => {
+                    openCropper(file, "user");
+                    return false;
+                  }}
+                  className="w-full"
+                >
+                  <Button
+                    icon={<UploadOutlined />}
+                    className="w-full"
+                    style={{ display: "block", width: "100%" }}
+                  >
+                    Upload Image
+                  </Button>
+                </Upload>
+              </div>
+            </div>
+          </Form.Item>
+          <Form.Item name="spouse_image" label={<span>Spouse Image</span>}>
+            <div className="flex items-center gap-4">
+              <AvatarCell imageSrc={spouseImageInfo.preview} />{" "}
+              <Upload
+                showUploadList={false}
+                accept="image/*"
+                beforeUpload={(file) => {
+                  openCropper(file, "spouse");
+                  return false;
+                }}
+              >
+                <Button icon={<UploadOutlined />} className="w-full">
+                  Upload Image
+                </Button>
+              </Upload>
+            </div>
+          </Form.Item>
+          <Form.Item label="Address" name="user_add" className="col-span-4">
             <Input.TextArea rows={4} />
           </Form.Item>
         </div>
@@ -338,21 +390,21 @@ const MemberForm = () => {
             Update
           </Button>
         </Form.Item>
-      </Form>
 
-      <CropImageModal
-        open={cropState.modalVisible}
-        imageSrc={cropState.imageSrc}
-        onCancel={() =>
-          setCropState((prev) => ({ ...prev, modalVisible: false }))
-        }
-        onCropComplete={handleCroppedImage}
-        maxCropSize={{ width: 400, height: 400 }}
-        title="Crop Member Image"
-        cropstucture={true}
-      />
-    </Card>
+        <CropImageModal
+          open={cropState.modalVisible}
+          imageSrc={cropState.imageSrc}
+          onCancel={() =>
+            setCropState((prev) => ({ ...prev, modalVisible: false }))
+          }
+          onCropComplete={handleCroppedImage}
+          maxCropSize={{ width: 400, height: 400 }}
+          title="Crop Member Image"
+          cropstucture={true}
+        />
+      </Card>
+    </Form>
   );
 };
 
-export default MemberForm;
+export default NewRegisterationForm;

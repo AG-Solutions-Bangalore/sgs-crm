@@ -22,17 +22,21 @@ import useFinalUserImage from "./common/Logo";
 const getMenuItems = (collapsed) => {
   const dashboardItems = [
     { key: "/home", icon: <HomeOutlined />, label: "Dashboard" },
-    { key: "/new-registery", icon: <TagsOutlined />, label: "New Registery" },
+    {
+      key: "/new-registration-list",
+      icon: <TagsOutlined />,
+      label: "New Registration",
+    },
   ];
 
   const eventChildren = [
-    { key: "/event", icon: <TagsOutlined />, label: "Event" },
+    { key: "/event-register", icon: <TagsOutlined />, label: "Event Register" },
     {
       key: "/",
       icon: <SolutionOutlined />,
-      label: "Event Registery",
+      label: "Event",
     },
-    { key: "/", icon: <CarOutlined />, label: "Event Tracker" },
+    { key: "/event-track", icon: <CarOutlined />, label: "Event Track" },
   ];
   const managementChildren = [
     { key: "/life-member", icon: <LockOutlined />, label: "Life Membership" },
@@ -41,7 +45,7 @@ const getMenuItems = (collapsed) => {
       icon: <SolutionOutlined />,
       label: "Couple Membership",
     },
-    { key: "/", icon: <CarOutlined />, label: "Trust" },
+    { key: "/truste-member", icon: <CarOutlined />, label: "Trustee" },
   ];
   const reportItemsChildren = [
     {

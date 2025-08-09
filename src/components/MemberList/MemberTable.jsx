@@ -17,7 +17,7 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
         <mark
           key={index}
           style={{
-            backgroundColor: "#93C5FD",
+            backgroundColor: "#3B82F6",
             color: "#ffffff",
             padding: "0 0.25rem",
             borderRadius: "0.25rem",
@@ -33,23 +33,31 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
 
   const columns = [
     {
-      title: "Image",
-      dataIndex: "user_image",
-      key: "avatar",
+      title: "Member Images",
+      key: "member_images",
       render: (_, user) => {
-        const imageSrc = user.user_image
-          ? `${imageUrls.userImageBase}${user.user_image}?v=${Math.random()}`
+        const memberImageSrc = user.user_image
+          ? `${imageUrls.userImageBase}${user.user_image}`
+          : imageUrls.noImage;
+        const spouseImageSrc = user.spouse_image
+          ? `${imageUrls.userImageBase}${user.spouse_image}`
           : imageUrls.noImage;
 
-        return <AvatarCell imageSrc={imageSrc} />;
+        return (
+          <div className="flex justify-center gap-2">
+            <AvatarCell imageSrc={memberImageSrc} />
+            {user.user_type == "Couple Membership" && (
+              <AvatarCell imageSrc={spouseImageSrc} />
+            )}
+          </div>
+        );
       },
     },
-
     {
       title: "Name",
-      dataIndex: "user_full_name",
-      key: "user_full_name",
-      render: (_, user) => highlightMatch(user.user_full_name, user._match),
+      dataIndex: "name",
+      key: "name",
+      render: (_, user) => highlightMatch(user.name, user._match),
     },
 
     {
@@ -87,10 +95,10 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
     },
     {
       title: "Status",
-      dataIndex: "user_status",
-      key: "user_status",
+      dataIndex: "is_active",
+      key: "is_active",
       render: (_, user) => {
-        const isActive = user.user_status === "active";
+        const isActive = user.is_active === "active";
 
         return (
           <div className="flex justify-center">

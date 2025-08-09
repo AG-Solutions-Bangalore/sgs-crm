@@ -6,7 +6,7 @@ import VersionCheck from "./components/VersionCheck";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import SignIn from "./pages/auth/SignIn";
 import DeliveryList from "./pages/delivery/DeliveryList";
-import EvenList from "./pages/event/EventList";
+import EvenRegisterList from "./pages/eventregister/EventRegisterList";
 import GuestUserList from "./pages/guestuser/GuestUserList";
 import GuestUserOrderForm from "./pages/guestuserorder/GuestUserOrderForm";
 import GuestUserOrderList from "./pages/guestuserorder/GuestUserOrderList";
@@ -30,9 +30,11 @@ import UserForm from "./pages/user/UserForm";
 import UserList from "./pages/user/UserList";
 import WebsiteEnquiry from "./pages/websiteenquiry/WebsiteEnquiry";
 import MemberForm from "./components/MemberList/MemberForm";
-import CoupleMembersPage from "./pages/couple/CoupleMembersPage";
-import NewRegisterationList from "./pages/newRegisteration/NewRegsitery";
+import CoupleMembersPage from "./pages/member/CoupleMembersPage";
 import NewRegisterationForm from "./pages/newRegisteration/NewRegisterationForm";
+import EventTractList from "./pages/eventtrack/EventTractList";
+import NewRegisterationList from "./pages/newRegisteration/NewRegisterationList";
+import TrusteMemberPage from "./pages/member/TrusteMemberPage";
 
 function App() {
   return (
@@ -51,22 +53,21 @@ function App() {
             <ProtectedLayout>
               <Routes>
                 <Route path="/home" element={<Dashbord />} />
-                <Route path="/event" element={<EvenList />} />
+                <Route path="/event-register" element={<EvenRegisterList />} />
+                <Route path="/event-track" element={<EventTractList />} />
                 <Route
-                  path="/new-registery"
+                  path="/new-registration-list"
                   element={<NewRegisterationList />}
                 />
                 <Route
-                  path="/new-registery-form"
+                  path="/new-registration-form/:newId"
                   element={<NewRegisterationForm />}
                 />
-                <Route
-                  path="/new-registery-form/:newId"
-                  element={<NewRegisterationForm />}
-                />
-                {/* ////////////////////// */}
                 <Route path="/life-member" element={<LifeMembersPage />} />
                 <Route path="/couple-member" element={<CoupleMembersPage />} />
+                <Route path="/truste-member" element={<TrusteMemberPage />} />
+                {/* ////////////////////// */}
+
                 <Route
                   path="/members/edit/:memberId"
                   element={<MemberForm />}

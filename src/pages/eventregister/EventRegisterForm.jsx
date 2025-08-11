@@ -1,6 +1,6 @@
 import { App, Button, Card, Form, Input, Modal, Select, Spin } from "antd";
 import { useEffect, useState } from "react";
-import { EVENT_DATA, PAYMENT_MODE } from "../../api";
+import { EVENT_REGISTER, PAYMENT_MODE } from "../../api";
 import { useApiMutation } from "../../hooks/useApiMutation";
 
 const EventRegisterForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
@@ -34,13 +34,13 @@ const EventRegisterForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
       }
     } catch (err) {
       console.error("Error fetching payment data:", err);
-      message.error(error.response.data.message || "Something went wrong.");
+      message.error(err.response.data.message || "Something went wrong.");
     }
   };
   const fetchEvent = async () => {
     try {
       const res = await fetchTrigger({
-        url: `${EVENT_DATA}/${eventId}`,
+        url: `${EVENT_REGISTER}/${eventId}`,
       });
       if (!res?.data) return;
       const event = res.data;
@@ -57,7 +57,7 @@ const EventRegisterForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
       });
     } catch (err) {
       console.error("Fetch error:", err);
-      message.error(error.response.data.message || "Something went wrong.");
+      message.error(err.response.data.message || "Something went wrong.");
     }
   };
 
@@ -73,7 +73,9 @@ const EventRegisterForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   const handleSubmit = async (values) => {
     try {
       const res = await submitTrigger({
-        url: isEditMode ? `${EVENT_DATA}/${eventId}?_method=PUT` : EVENT_DATA,
+        url: isEditMode
+          ? `${EVENT_REGISTER}/${eventId}?_method=PUT`
+          : EVENT_REGISTER,
         method: isEditMode ? "put" : "post",
         data: values,
       });

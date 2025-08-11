@@ -1,26 +1,56 @@
-import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Input, Space, Spin, Tooltip } from "antd";
+import {
+  EditOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import {
+  Button,
+  Card,
+  Input,
+  Popconfirm,
+  Space,
+  Spin,
+  Tag,
+  Tooltip,
+} from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { EVENT_REGISTER } from "../../api";
+import { EVENT } from "../../api";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
-import EventRegisterForm from "./EventRegisterForm";
+import AvatarCell from "../../components/common/AvatarCell";
+import EventForm from "./EventForm";
 const { Search } = Input;
-const EvenRegisterList = () => {
+const EventList = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { trigger, loading: isMutating } = useApiMutation();
   const [users, setUsers] = useState([]);
-
+  const [imageUrls, setImageUrls] = useState({
+    userImageBase: "",
+    noImage: "",
+  });
   const fetchUser = async () => {
     const res = await trigger({
-      url: EVENT_REGISTER,
+      url: EVENT,
     });
 
     if (Array.isArray(res.data)) {
       setUsers(res.data);
+
+      const userImageObj = res.image_url?.find(
+        (img) => img.image_for == "Event"
+      );
+      const noImageObj = res.image_url?.find(
+        (img) => img.image_for == "No Image"
+      );
+
+      setImageUrls({
+        userImageBase: userImageObj?.image_url || "",
+        noImage: noImageObj?.image_url || "",
+      });
     }
   };
 
@@ -61,60 +91,86 @@ const EvenRegisterList = () => {
 
   const columns = [
     {
+      title: "",
+      key: "member_images",
+      render: (_, user) => {
+        const eventImageSrc = user.event_image
+          ? `${imageUrls.userImageBase}${user.event_image}`
+          : imageUrls.noImage;
+
+        return (
+          <div className="flex justify-center gap-2">
+            <AvatarCell imageSrc={eventImageSrc} />
+          </div>
+        );
+      },
+    },
+    {
       title: "Name",
       dataIndex: "event_name",
       key: "event_name",
       render: (_, user) => highlightMatch(user.event_name, user._match),
     },
     {
-      title: "Member Type",
-      dataIndex: "user_member_type",
-      key: "user_member_type",
-      render: (_, user) => highlightMatch(user.user_member_type, user._match),
-    },
-
-    {
-      title: "Registration Date",
-      dataIndex: "event_register_date",
-      key: "event_register_date",
+      title: "From Date",
+      dataIndex: "event_from_date",
+      key: "event_from_date",
       render: (_, user) =>
         highlightMatch(
-          dayjs(user.event_register_date).format("DD-MM-YYYY"),
+          dayjs(user.event_from_date).format("DD-MM-YYYY"),
           user._match
         ),
     },
     {
-      title: "Mobile",
-      dataIndex: "event_register_mobile",
-      key: "event_register_mobile",
-      render: (_, user) => (
-        <a href={`tel:${user.event_register_mobile}`}>
-          {highlightMatch(user.event_register_mobile, user._match)}
-        </a>
-      ),
+      title: "To Date",
+      dataIndex: "event_to_date",
+      key: "event_to_date",
+      render: (_, user) =>
+        highlightMatch(
+          dayjs(user.event_to_date).format("DD-MM-YYYY"),
+          user._match
+        ),
     },
     {
-      title: "Email",
-      dataIndex: "event_register_email",
-      key: "event_register_email",
-      render: (_, user) =>
-        highlightMatch(user.event_register_email, user._match),
-    },
-    {
-      title: "Amount",
-      dataIndex: "event_register_amount",
-      key: "event_register_amount",
-      render: (_, user) =>
-        highlightMatch(user.event_register_amount, user._match),
-    },
-    {
-      title: "Payment Type",
-      dataIndex: "event_register_payment_type",
-      key: "event_register_payment_type",
-      render: (_, user) =>
-        highlightMatch(user.event_register_payment_type, user._match),
+      title: "Payment",
+      dataIndex: "event_payment",
+      key: "event_payment",
+      render: (_, user) => highlightMatch(user.event_payment, user._match),
     },
 
+    {
+      title: "Amount",
+      dataIndex: "event_amount",
+      key: "event_amount",
+      render: (_, user) => highlightMatch(user.event_amount, user._match),
+    },
+
+    {
+      title: "Status",
+      dataIndex: "event_status",
+      key: "event_status",
+      render: (_, user) => {
+        const isActive = user.event_status == "Active";
+
+        return (
+          <div className="flex justify-center">
+            <Popconfirm
+              title={`Mark member as ${isActive ? "Inactive" : "Active"}?`}
+              okText="Yes"
+              cancelText="No"
+            >
+              <Tag
+                color={isActive ? "green" : "red"}
+                // icon={isActive ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                className="cursor-pointer"
+              >
+                {isActive ? "Active" : "Inactive"}
+              </Tag>
+            </Popconfirm>
+          </div>
+        );
+      },
+    },
     {
       title: "Actions",
       key: "actions",
@@ -181,7 +237,7 @@ const EvenRegisterList = () => {
           <div className="text-center text-gray-500 py-20">No data found.</div>
         )}
       </div>
-      <EventRegisterForm
+      <EventForm
         open={openDialog}
         setOpenDialog={setOpenDialog}
         eventId={eventId}
@@ -191,4 +247,4 @@ const EvenRegisterList = () => {
   );
 };
 
-export default EvenRegisterList;
+export default EventList;

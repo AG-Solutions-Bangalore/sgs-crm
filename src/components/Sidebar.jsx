@@ -30,12 +30,13 @@ const getMenuItems = (collapsed) => {
   ];
 
   const eventChildren = [
-    { key: "/event-register", icon: <TagsOutlined />, label: "Event Register" },
     {
-      key: "/",
+      key: "/event",
       icon: <SolutionOutlined />,
       label: "Event",
     },
+    { key: "/event-register", icon: <TagsOutlined />, label: "Event Register" },
+
     { key: "/event-track", icon: <CarOutlined />, label: "Event Track" },
   ];
   const managementChildren = [
@@ -75,17 +76,18 @@ const getMenuItems = (collapsed) => {
   if (collapsed) {
     return [
       ...dashboardItems,
+
       {
         key: "sub",
         icon: <MailOutlined />,
-        label: <span id="report-scroll-anchor">Event</span>,
-        children: eventChildren,
+        label: "Management",
+        children: managementChildren,
       },
       {
         key: "sub1",
         icon: <MailOutlined />,
-        label: "Management",
-        children: managementChildren,
+        label: <span id="report-scroll-anchor">Event</span>,
+        children: eventChildren,
       },
       {
         key: "sub2",
@@ -107,7 +109,7 @@ const getMenuItems = (collapsed) => {
       label: "Member",
       children: [
         {
-          key: "sub1",
+          key: "sub",
           icon: <MailOutlined />,
           label: "Member",
           children: managementChildren,
@@ -119,7 +121,7 @@ const getMenuItems = (collapsed) => {
       label: "Event",
       children: [
         {
-          key: "sub",
+          key: "sub1",
           icon: <MailOutlined />,
           label: <span id="report-scroll-anchor">Event</span>,
           children: eventChildren,

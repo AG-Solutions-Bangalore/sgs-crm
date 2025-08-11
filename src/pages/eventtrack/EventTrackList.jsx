@@ -1,13 +1,31 @@
-import { EditOutlined, PlusOutlined } from "@ant-design/icons";
-import { Button, Card, Input, Space, Spin, Tooltip } from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  QqSquareFilled,
+} from "@ant-design/icons";
+import {
+  App,
+  Button,
+  Card,
+  Input,
+  Popconfirm,
+  Space,
+  Spin,
+  Tooltip,
+} from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { EVENT_TRACK } from "../../api";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
-import EventTractForm from "./EventTractForm";
+import EventTrackForm from "./EventTrackForm";
+import EventTrackerQR from "./EventTrackerQR";
 const { Search } = Input;
-const EventTractList = () => {
+const EventTrackList = () => {
+  const { message } = App.useApp();
+
+  const [openQrDialog, setOpenQrDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,6 +55,22 @@ const EventTractList = () => {
     setEventId(null);
     setOpenDialog(true);
   };
+  const handleDelete = async (user) => {
+    try {
+      const res = await trigger({
+        url: `${EVENT_TRACK}/${user.event_id}`,
+        method: "delete",
+      });
+
+      if (res?.code === 201) {
+        message.success(res.message || "Deleted event successfully.");
+      } else {
+        message.error(res.message || "Failed to deleted event.");
+      }
+    } catch (error) {
+      message.error(error.message || "Error deleted event.");
+    }
+  };
   const highlightMatch = (text, match) => {
     if (!match || !text) return text;
     const regex = new RegExp(`(${match})`, "gi");
@@ -61,16 +95,22 @@ const EventTractList = () => {
 
   const columns = [
     {
-      title: "Name",
+      title: "Event Name",
       dataIndex: "event_name",
       key: "event_name",
       render: (_, user) => highlightMatch(user.event_name, user._match),
     },
     {
-      title: "Member Type",
-      dataIndex: "user_member_type",
-      key: "user_member_type",
-      render: (_, user) => highlightMatch(user.user_member_type, user._match),
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (_, user) => highlightMatch(user.name, user._match),
+    },
+    {
+      title: "Member Id",
+      dataIndex: "event_member_mid",
+      key: "event_member_mid",
+      render: (_, user) => highlightMatch(user.event_member_mid, user._match),
     },
 
     {
@@ -97,6 +137,14 @@ const EventTractList = () => {
       render: (_, user) => {
         return (
           <Space>
+            <Tooltip title="QR">
+              <Button
+                type="primary"
+                icon={<QqSquareFilled />}
+                size="small"
+                onClick={() => setOpenQrDialog(true)}
+              />
+            </Tooltip>
             <Tooltip title="Edit User">
               <Button
                 type="primary"
@@ -104,6 +152,21 @@ const EventTractList = () => {
                 size="small"
                 onClick={() => handleEdit(user)}
               />
+            </Tooltip>
+            <Tooltip title="Delete Event Track">
+              <Popconfirm
+                title="Are you sure you want to delete this event track?"
+                onConfirm={() => handleDelete(user)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  icon={<DeleteOutlined />}
+                  size="small"
+                  type="primary"
+                  danger
+                />
+              </Popconfirm>
             </Tooltip>
           </Space>
         );
@@ -157,14 +220,19 @@ const EventTractList = () => {
           <div className="text-center text-gray-500 py-20">No data found.</div>
         )}
       </div>
-      <EventTractForm
+      <EventTrackForm
         open={openDialog}
         setOpenDialog={setOpenDialog}
         eventId={eventId}
         fetchEvents={fetchUser}
+        EVENT_DATA={EVENT_TRACK}
+      />
+      <EventTrackerQR
+        openQrDialog={openQrDialog}
+        setOpenQrDialog={setOpenQrDialog}
       />
     </Card>
   );
 };
 
-export default EventTractList;
+export default EventTrackList;

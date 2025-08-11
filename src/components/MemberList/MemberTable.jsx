@@ -33,7 +33,7 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
 
   const columns = [
     {
-      title: "Member Images",
+      title: "",
       key: "member_images",
       render: (_, user) => {
         const memberImageSrc = user.user_image
@@ -46,12 +46,19 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
         return (
           <div className="flex justify-center gap-2">
             <AvatarCell imageSrc={memberImageSrc} />
-            {user.user_type == "Couple Membership" && (
+            {user.user_member_type == "Couple Membership" && (
               <AvatarCell imageSrc={spouseImageSrc} />
             )}
           </div>
         );
       },
+    },
+
+    {
+      title: "MID",
+      dataIndex: "user_mid",
+      key: "user_mid",
+      render: (_, user) => highlightMatch(user.user_mid, user._match),
     },
     {
       title: "Name",
@@ -73,26 +80,7 @@ const MemberTable = ({ users, onEdit, imageUrls, handleToggleStatus }) => {
       key: "user_spouse_name",
       render: (_, user) => highlightMatch(user.user_spouse_name, user._match),
     },
-    {
-      title: "From Date",
-      dataIndex: "event_from_date",
-      key: "event_from_date",
-      render: (_, user) =>
-        highlightMatch(
-          dayjs(user.event_from_date).format("DD-MM-YYYY"),
-          user._match
-        ),
-    },
-    {
-      title: "To Date",
-      dataIndex: "event_to_date",
-      key: "event_to_date",
-      render: (_, user) =>
-        highlightMatch(
-          dayjs(user.event_to_date).format("DD-MM-YYYY"),
-          user._match
-        ),
-    },
+
     {
       title: "Status",
       dataIndex: "is_active",

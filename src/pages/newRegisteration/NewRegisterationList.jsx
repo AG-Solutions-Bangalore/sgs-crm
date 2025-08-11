@@ -3,13 +3,10 @@ import {
   EditOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-  PlusOutlined,
-  UserOutlined,
-  UserSwitchOutlined,
+  UserSwitchOutlined
 } from "@ant-design/icons";
 import {
   App,
-  Avatar,
   Button,
   Card,
   Input,
@@ -17,7 +14,7 @@ import {
   Space,
   Spin,
   Tag,
-  Tooltip,
+  Tooltip
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -26,9 +23,9 @@ import {
   CONVERT_NEW_REGISTRATION_TO_MEMEBER,
   REGESTRATION_DATA,
 } from "../../api";
+import AvatarCell from "../../components/common/AvatarCell";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
-import AvatarCell from "../../components/common/AvatarCell";
 
 const { Search } = Input;
 
@@ -156,7 +153,7 @@ const NewRegisterationList = () => {
   };
   const columns = [
     {
-      title: "Member Images",
+      title: "",
       key: "member_images",
       width: 180,
       render: (_, user) => (

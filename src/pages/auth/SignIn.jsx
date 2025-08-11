@@ -13,7 +13,6 @@ const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { trigger, loading } = useApiMutation();
-  // const auth = useSelector((state) => state.auth);
   const token = useSelector((state) => state.auth.token);
   const finalUserImage = useFinalUserImage();
   if (token) {
@@ -48,10 +47,14 @@ const SignIn = () => {
 
         navigate("/home");
       } else {
-        message.error("Login Failed, Please check your credentials.");
+        message.error(
+          res.message || "Login Failed, Please check your credentials."
+        );
       }
-    } catch {
-      message.error("An error occurred during login.");
+    } catch (err) {
+      message.error(
+        err.response.data.message || "An error occurred during login."
+      );
     }
   };
 
@@ -59,7 +62,6 @@ const SignIn = () => {
     <>
       <div className="min-h-screen flex items-center justify-center ">
         <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 backdrop-blur-md p-6 m-4 overflow-hidden">
-          {/* Left Side - Login Form */}
           <div className="flex flex-col justify-center px-6 py-8">
             <div className="text-center mb-6">
               <img
@@ -93,8 +95,9 @@ const SignIn = () => {
                 rules={[
                   { required: true, message: "Please enter your username" },
                 ]}
+                
               >
-                <Input size="large" placeholder="Enter username" />
+                <Input size="large" placeholder="Enter username" autoFocus/>
               </Form.Item>
 
               <Form.Item
@@ -125,7 +128,7 @@ const SignIn = () => {
 
           <div className="hidden md:flex items-center justify-center">
             <img
-              src="https://img.freepik.com/free-vector/shop-with-sign-we-are-open_23-2148562563.jpg?ga=GA1.1.70886028.1749460191&semt=ais_hybrid&w=740"
+              src="https://img.freepik.com/free-vector/letter-s-j-creative-logo-design_474888-3771.jpg?t=st=1754888964~exp=1754892564~hmac=46d2d77befe78137ec831d2cffcd6ff0f8891c677536a9f99f8a1d4785b6d6a8&w=1060"
               alt="Login Illustration"
               className="w-full h-full object-cover rounded-md"
             />

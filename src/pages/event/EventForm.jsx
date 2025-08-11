@@ -18,6 +18,13 @@ import { EVENT } from "../../api";
 import AvatarCell from "../../components/common/AvatarCell";
 import CropImageModal from "../../components/common/CropImageModal";
 import { useApiMutation } from "../../hooks/useApiMutation";
+const membershipTypes = [
+  { label: "All", value: "All" },
+  { label: "Life Membership", value: "Life Membership" },
+  { label: "Trustee", value: "Trustee" },
+  { label: "Couple Membership", value: "Couple Membership" },
+  { label: "Members", value: "Members" },
+];
 
 const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   const { message } = App.useApp();
@@ -49,6 +56,8 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
       event_from_date: "",
       event_to_date: "",
       event_status: false,
+      event_member_allowed: "",
+      event_no_member_allowed: "",
     });
     setEventImageInfo({ file: null, preview: "" });
   };
@@ -78,6 +87,8 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
         event_description: event.event_description,
         event_payment: event.event_payment,
         event_amount: event.event_amount,
+        event_member_allowed: event.event_member_allowed,
+        event_no_member_allowed: event.event_no_member_allowed,
         event_from_date: event.event_from_date
           ? dayjs(event.event_from_date)
           : null,
@@ -99,20 +110,20 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   }, [eventId]);
 
   const handleSubmit = async (values) => {
+    const [from, to] = values?.date_range || [];
     const formData = new FormData();
     formData.append("event_name", values.event_name?.trim() || "");
     formData.append(
       "event_description",
       values.event_description?.trim() || ""
     );
+    formData.append("event_member_allowed", values.event_member_allowed || "");
     formData.append(
-      "event_from_date",
-      values.event_from_date ? values.event_from_date.format("YYYY-MM-DD") : ""
+      "event_no_member_allowed",
+      values.event_no_member_allowed || ""
     );
-    formData.append(
-      "event_to_date",
-      values.event_to_date ? values.event_to_date.format("YYYY-MM-DD") : ""
-    );
+    formData.append("event_from_date", from ? from.format("YYYY-MM-DD") : "");
+    formData.append("event_to_date", to ? to.format("YYYY-MM-DD") : "");
     formData.append("event_payment", values.event_payment?.trim() || "");
     formData.append("event_amount", values.event_amount?.trim() || "");
     if (eventImageInfo.file) {
@@ -225,7 +236,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
             }
             bordered={false}
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <Form.Item
                 label={
                   <span>
@@ -238,14 +249,30 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                 <Input maxLength={50} />
               </Form.Item>
 
-              <Form.Item label="From Date" name="event_from_date">
+              {/* <Form.Item label="From Date" name="event_from_date">
                 <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
               </Form.Item>
 
               <Form.Item label="To Date" name="event_to_date">
                 <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
+              </Form.Item> */}
+              <Form.Item
+                label={
+                  <span>
+                    Date <span className="text-red-500">*</span>
+                  </span>
+                }
+                name="date_range"
+                rules={[
+                  { required: true, message: "Please select a date range" },
+                ]}
+              >
+                <DatePicker.RangePicker
+                  format="DD-MM-YYYY"
+                  className="w-full"
+                  placeholder={["From Date", "To Date"]}
+                />
               </Form.Item>
-
               <Form.Item
                 name="event_payment"
                 label={
@@ -279,7 +306,54 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                   <Input maxLength={10} />
                 </Form.Item>
               )}
-              <Form.Item name="event_image" label="Event Image">
+
+              <Form.Item
+                label={
+                  <span>
+                    Allowed Member <span className="text-red-500">*</span>
+                  </span>
+                }
+                name="event_member_allowed"
+                rules={[{ required: true, message: "Select a Allowed Member" }]}
+              >
+                <Select placeholder="Select Allowed Member " allowClear>
+                  {membershipTypes.map((type) => (
+                    <Option key={type.value} value={type.value}>
+                      {type.label}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label={
+                  <span>
+                    No of Member Allowed <span className="text-red-500">*</span>
+                  </span>
+                }
+                name="event_no_member_allowed"
+                rules={[
+                  {
+                    pattern: /^\d+$/,
+                    message: "Please enter a valid  number",
+                  },
+                  {
+                    required: true,
+                    message: "No of Member Allowed is required",
+                  },
+                ]}
+              >
+                <Input max={999} maxLength={3} />
+              </Form.Item>
+              <Form.Item
+                name="event_image"
+                label={
+                  <span>
+                    Event Image <span className="text-red-500">*</span>
+                  </span>
+                }
+                rules={[{ required: true, message: "Event Image is required" }]}
+              >
                 <div className="flex items-center gap-4">
                   <AvatarCell imageSrc={eventImageInfo.preview} />
                   <Upload

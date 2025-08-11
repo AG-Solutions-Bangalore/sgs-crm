@@ -10,7 +10,6 @@ import EvenRegisterList from "./pages/eventregister/EventRegisterList";
 import GuestUserList from "./pages/guestuser/GuestUserList";
 import GuestUserOrderForm from "./pages/guestuserorder/GuestUserOrderForm";
 import GuestUserOrderList from "./pages/guestuserorder/GuestUserOrderList";
-// import Dashbord from "./pages/home/dashbord";
 import LifeMembersPage from "./pages/member/LifeMembersPage";
 import Notification from "./pages/notification/Notification";
 import OrderForm from "./pages/order/OrderForm";
@@ -37,6 +36,7 @@ import TrusteMemberPage from "./pages/member/TrusteMemberPage";
 import EventTrackList from "./pages/eventtrack/EventTrackList";
 import EventList from "./pages/event/EventList";
 import EventDetailsPage from "./pages/eventtrack/EventDetailsPage";
+import Dashboard from "./pages/home/Dashboard";
 
 function App() {
   return (
@@ -54,7 +54,7 @@ function App() {
           element={
             <ProtectedLayout>
               <Routes>
-                {/* <Route path="/home" element={<Dashbord />} /> */}
+                <Route path="/home" element={<Dashboard />} />
                 <Route path="/event" element={<EventList />} />
                 <Route path="/event-register" element={<EvenRegisterList />} />
                 <Route path="/event-track" element={<EventTrackList />} />
@@ -73,7 +73,7 @@ function App() {
                   path="/members/edit/:memberId"
                   element={<MemberForm />}
                 />
-                <Route path="/event-details" element={<EventDetailsPage/>} />
+                <Route path="/event-details" element={<EventDetailsPage />} />
 
                 {/* ////////////////////// */}
 

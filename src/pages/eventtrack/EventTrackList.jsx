@@ -1,18 +1,15 @@
 import {
-  DeleteOutlined,
   EditOutlined,
-  PlusOutlined,
-  QqSquareFilled,
+  PlusOutlined
 } from "@ant-design/icons";
 import {
   App,
   Button,
   Card,
   Input,
-  Popconfirm,
   Space,
   Spin,
-  Tooltip,
+  Tooltip
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -20,12 +17,10 @@ import { EVENT_TRACK } from "../../api";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
 import EventTrackForm from "./EventTrackForm";
-import EventTrackerQR from "./EventTrackerQR";
 const { Search } = Input;
 const EventTrackList = () => {
   const { message } = App.useApp();
 
-  const [openQrDialog, setOpenQrDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,10 +46,10 @@ const EventTrackList = () => {
     setOpenDialog(true);
   };
 
-  const handleAddUser = () => {
-    setEventId(null);
-    setOpenDialog(true);
-  };
+  // const handleAddUser = () => {
+  //   setEventId(null);
+  //   setOpenDialog(true);
+  // };
   const handleDelete = async (user) => {
     try {
       const res = await trigger({
@@ -137,14 +132,7 @@ const EventTrackList = () => {
       render: (_, user) => {
         return (
           <Space>
-            <Tooltip title="QR">
-              <Button
-                type="primary"
-                icon={<QqSquareFilled />}
-                size="small"
-                onClick={() => setOpenQrDialog(true)}
-              />
-            </Tooltip>
+       
             <Tooltip title="Edit User">
               <Button
                 type="primary"
@@ -153,7 +141,7 @@ const EventTrackList = () => {
                 onClick={() => handleEdit(user)}
               />
             </Tooltip>
-            <Tooltip title="Delete Event Track">
+            {/* <Tooltip title="Delete Event Track">
               <Popconfirm
                 title="Are you sure you want to delete this event track?"
                 onConfirm={() => handleDelete(user)}
@@ -167,7 +155,7 @@ const EventTrackList = () => {
                   danger
                 />
               </Popconfirm>
-            </Tooltip>
+            </Tooltip> */}
           </Space>
         );
       },
@@ -200,13 +188,13 @@ const EventTrackList = () => {
             className="max-w-sm"
           />
 
-          <Button
+          {/* <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={handleAddUser}
           >
             Add Event Track
-          </Button>
+          </Button> */}
         </div>
       </div>
       <div className="min-h-[26rem]">
@@ -227,10 +215,7 @@ const EventTrackList = () => {
         fetchEvents={fetchUser}
         EVENT_DATA={EVENT_TRACK}
       />
-      <EventTrackerQR
-        openQrDialog={openQrDialog}
-        setOpenQrDialog={setOpenQrDialog}
-      />
+
     </Card>
   );
 };

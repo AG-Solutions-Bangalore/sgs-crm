@@ -1,13 +1,9 @@
-import {
-  EditOutlined,
-  EyeInvisibleOutlined,
-  EyeOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, PlusOutlined, QrcodeOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
   Input,
+  Modal,
   Popconfirm,
   Space,
   Spin,
@@ -17,13 +13,17 @@ import {
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { EVENT } from "../../api";
+import AvatarCell from "../../components/common/AvatarCell";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
-import AvatarCell from "../../components/common/AvatarCell";
+import EventMidScanner from "../eventtrack/EventTrackerQR";
+import EventTrackForm from "../eventtrack/EventTrackForm";
 import EventForm from "./EventForm";
 const { Search } = Input;
 const EventList = () => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openQrDialog, setOpenQrDialog] = useState(false);
+  const [openEventDialog, setOpenEventDialog] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { trigger, loading: isMutating } = useApiMutation();
@@ -58,6 +58,11 @@ const EventList = () => {
     fetchUser();
   }, []);
 
+  const handleScanner = (user) => {
+    console.log(user, "user");
+    setEventId(user.id);
+    setOpenQrDialog(true);
+  };
   const handleEdit = (user) => {
     setEventId(user.id);
     setOpenDialog(true);
@@ -144,6 +149,20 @@ const EventList = () => {
       key: "event_amount",
       render: (_, user) => highlightMatch(user.event_amount, user._match),
     },
+    {
+      title: "Allowed Member",
+      dataIndex: "event_member_allowed",
+      key: "event_member_allowed",
+      render: (_, user) =>
+        highlightMatch(user.event_member_allowed, user._match),
+    },
+    {
+      title: "No of Allowed",
+      dataIndex: "event_no_member_allowed",
+      key: "event_no_member_allowed",
+      render: (_, user) =>
+        highlightMatch(user.event_no_member_allowed, user._match),
+    },
 
     {
       title: "Status",
@@ -175,6 +194,15 @@ const EventList = () => {
       title: "Actions",
       key: "actions",
       render: (_, user) => {
+        const today = dayjs();
+        const startDate = dayjs(user.event_from_date);
+        const endDate = dayjs(user.event_to_date);
+
+        // Check if current date is within the start and end date (inclusive)
+        const isActivePeriod =
+          today.isSame(startDate, "day") ||
+          today.isSame(endDate, "day") ||
+          (today.isAfter(startDate) && today.isBefore(endDate));
         return (
           <Space>
             <Tooltip title="Edit User">
@@ -183,6 +211,24 @@ const EventList = () => {
                 icon={<EditOutlined />}
                 size="small"
                 onClick={() => handleEdit(user)}
+              />
+            </Tooltip>
+            <Tooltip title="Add Tracker">
+              <Button
+                type="primary"
+                icon={<PlusOutlined />}
+                size="small"
+                onClick={() => setOpenEventDialog(true)}
+                disabled={!isActivePeriod}
+              />
+            </Tooltip>
+            <Tooltip title="QR">
+              <Button
+                type="primary"
+                icon={<QrcodeOutlined />}
+                size="small"
+                onClick={() => handleScanner(user)}
+                disabled={!isActivePeriod}
               />
             </Tooltip>
           </Space>
@@ -242,6 +288,19 @@ const EventList = () => {
         setOpenDialog={setOpenDialog}
         eventId={eventId}
         fetchEvents={fetchUser}
+      />
+      <Modal
+        open={openQrDialog}
+        footer={null}
+        onCancel={() => setOpenQrDialog(false)}
+        centered
+        width={420}
+      >
+        <EventMidScanner eventId={eventId} setOpenQrDialog={setOpenQrDialog} />
+      </Modal>
+      <EventTrackForm
+        open={openEventDialog}
+        setOpenDialog={setOpenEventDialog}
       />
     </Card>
   );

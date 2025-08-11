@@ -79,7 +79,7 @@ const NewRegisterationForm = () => {
       });
     } catch (err) {
       console.error("Fetch error:", err);
-      message.error(error.response.data.message || "Something went wrong.");
+      message.error(err.response.data.message || "Something went wrong.");
     }
   };
 

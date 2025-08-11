@@ -4,26 +4,22 @@ import { useEffect, useState } from "react";
 import { EVENT_TRACK } from "../../api";
 import { useApiMutation } from "../../hooks/useApiMutation";
 
-const EventTractForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
+const EventTrackForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   const { message } = App.useApp();
   const [form] = Form.useForm();
   const [initialData, setInitialData] = useState({});
   const { trigger: fetchTrigger, loading: fetchloading } = useApiMutation();
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
+  const isEditMode = Boolean(eventId);
 
   const resetForm = () => {
     form.setFieldsValue({
-      event_register_name: "",
-      event_register_mobile: "",
-      event_register_email: "",
-      event_register_mid: "",
-      event_register_amount: "",
-      event_register_payment_type: "",
-      event_register_transaction: "",
+      event_id: "",
+      event_member_mid: "",
+      event_entry_date: "",
+      event_no_of_people: "",
     });
   };
-
-  const isEditMode = Boolean(eventId);
 
   const fetchEvent = async () => {
     try {
@@ -35,13 +31,8 @@ const EventTractForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
       setInitialData(event);
 
       form.setFieldsValue({
-        event_register_name: event.event_register_name,
-        event_register_mobile: event.event_register_mobile,
-        event_register_email: event.event_register_email,
-        event_register_mid: event.event_register_mid,
-        event_register_amount: event.event_register_amount,
-        event_register_payment_type: event.event_register_payment_type,
-        event_register_transaction: event.event_register_transaction,
+        event_member_mid: event.event_member_mid,
+        event_no_of_people: event.event_no_of_people,
       });
     } catch (err) {
       console.error("Fetch error:", err);
@@ -116,20 +107,26 @@ const EventTractForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
             className="mt-4"
           >
             <div className="grid grid-cols-2 gap-2">
-              <Form.Item
-                label={
-                  <span>
-                    Event Id <span className="text-red-500">*</span>
-                  </span>
-                }
-                name="event_id"
-                rules={[{ required: true, message: "Event Id is required" }]}
-              >
-                <Input maxLength={10} />
-              </Form.Item>
-              <Form.Item label="Entry Date" name="event_entry_date">
-                <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
-              </Form.Item>
+              {!isEditMode && (
+                <>
+                  <Form.Item
+                    label={
+                      <span>
+                        Event Id <span className="text-red-500">*</span>
+                      </span>
+                    }
+                    name="event_id"
+                    rules={[
+                      { required: true, message: "Event Id is required" },
+                    ]}
+                  >
+                    <Input maxLength={10} />
+                  </Form.Item>
+                  <Form.Item label="Entry Date" name="event_entry_date">
+                    <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
+                  </Form.Item>
+                </>
+              )}
               <Form.Item
                 label={
                   <span>
@@ -172,4 +169,4 @@ const EventTractForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   );
 };
 
-export default EventTractForm;
+export default EventTrackForm;

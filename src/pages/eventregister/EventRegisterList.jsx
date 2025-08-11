@@ -2,7 +2,7 @@ import { EditOutlined, PlusOutlined } from "@ant-design/icons";
 import { Button, Card, Input, Space, Spin, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { EVENT_DATA } from "../../api";
+import { EVENT_REGISTER } from "../../api";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
 import EventRegisterForm from "./EventRegisterForm";
@@ -16,7 +16,7 @@ const EvenRegisterList = () => {
 
   const fetchUser = async () => {
     const res = await trigger({
-      url: EVENT_DATA,
+      url: EVENT_REGISTER,
     });
 
     if (Array.isArray(res.data)) {
@@ -61,6 +61,12 @@ const EvenRegisterList = () => {
 
   const columns = [
     {
+      title: "MID",
+      dataIndex: "event_register_mid",
+      key: "event_register_mid",
+      render: (_, user) => highlightMatch(user.event_register_mid, user._match),
+    },
+    {
       title: "Name",
       dataIndex: "event_name",
       key: "event_name",
@@ -100,20 +106,20 @@ const EvenRegisterList = () => {
       render: (_, user) =>
         highlightMatch(user.event_register_email, user._match),
     },
-    {
-      title: "Amount",
-      dataIndex: "event_register_amount",
-      key: "event_register_amount",
-      render: (_, user) =>
-        highlightMatch(user.event_register_amount, user._match),
-    },
-    {
-      title: "Payment Type",
-      dataIndex: "event_register_payment_type",
-      key: "event_register_payment_type",
-      render: (_, user) =>
-        highlightMatch(user.event_register_payment_type, user._match),
-    },
+    // {
+    //   title: "Amount",
+    //   dataIndex: "event_register_amount",
+    //   key: "event_register_amount",
+    //   render: (_, user) =>
+    //     highlightMatch(user.event_register_amount, user._match),
+    // },
+    // {
+    //   title: "Payment Type",
+    //   dataIndex: "event_register_payment_type",
+    //   key: "event_register_payment_type",
+    //   render: (_, user) =>
+    //     highlightMatch(user.event_register_payment_type, user._match),
+    // },
 
     {
       title: "Actions",
@@ -151,7 +157,7 @@ const EvenRegisterList = () => {
   return (
     <Card>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h2 className="text-2xl font-bold text-blue-500">Event List</h2>
+        <h2 className="text-2xl font-bold text-blue-500">Event Register List</h2>
 
         <div className="flex-1 flex gap-4 sm:justify-end">
           <Search
@@ -161,13 +167,13 @@ const EvenRegisterList = () => {
             className="max-w-sm"
           />
 
-          <Button
+          {/* <Button
             type="primary"
             icon={<PlusOutlined />}
             onClick={handleAddUser}
           >
             Add Event
-          </Button>
+          </Button> */}
         </div>
       </div>
       <div className="min-h-[26rem]">

@@ -13,14 +13,14 @@ import {
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { REGESTRATION_DATA } from "../../api";
+import { GET_MEMBER_BY_ID, UPDATE_MEMBER } from "../../api";
 import AvatarCell from "../../components/common/AvatarCell";
 import CardHeader from "../../components/common/CardHeader";
 import CropImageModal from "../../components/common/CropImageModal";
 import membershipTypes from "../../components/json/membershipTypes.json";
 import { useApiMutation } from "../../hooks/useApiMutation";
 const NewRegisterationForm = () => {
-  const { newId } = useParams();
+  const { memberId } = useParams();
   const { message } = App.useApp();
   const [form] = Form.useForm();
   const [initialData, setInitialData] = useState({});
@@ -42,16 +42,26 @@ const NewRegisterationForm = () => {
     target: "",
   });
 
-  const isEditMode = Boolean(newId);
+  const isEditMode = Boolean(memberId);
 
   const fetchMember = async () => {
     try {
       const res = await fetchTrigger({
-        url: `${REGESTRATION_DATA}/${newId}`,
+        url: `${GET_MEMBER_BY_ID}/${memberId}`,
       });
       if (!res?.data) return;
       const member = res.data;
-      setInitialData(member);
+      let mappedData = {
+        ...member,
+      };
+      mappedData = {
+        ...member,
+        user_full_name: member.name,
+        user_mobile: member.mobile,
+        user_email: member.email,
+        user_status: member.is_active,
+      };
+      setInitialData(mappedData);
 
       const userImageBase = res.image_url?.find(
         (img) => img.image_for == "User"
@@ -71,7 +81,7 @@ const NewRegisterationForm = () => {
       }
 
       form.setFieldsValue({
-        ...member,
+        ...mappedData,
         user_dob: member.user_dob ? dayjs(member.user_dob) : null,
         user_spouse_dob: member.user_spouse_dob
           ? dayjs(member.user_spouse_dob)
@@ -79,7 +89,7 @@ const NewRegisterationForm = () => {
       });
     } catch (err) {
       console.error("Fetch error:", err);
-      message.error(error.response.data.message || "Something went wrong.");
+      message.error(err.response.data.message || "Something went wrong.");
     }
   };
 
@@ -89,7 +99,7 @@ const NewRegisterationForm = () => {
     } else {
       form.resetFields();
     }
-  }, [newId]);
+  }, [memberId]);
   const handleSubmit = async (values) => {
     try {
       const formData = new FormData();
@@ -116,7 +126,7 @@ const NewRegisterationForm = () => {
           ? values.user_spouse_dob.format("YYYY-MM-DD")
           : ""
       );
-      formData.append("user_type", values.user_type || "");
+      formData.append("user_member_type", values.user_member_type || "");
       formData.append("user_cat", values.user_cat || "");
       formData.append(
         "user_status",
@@ -130,7 +140,7 @@ const NewRegisterationForm = () => {
         formData.append("spouse_image", spouseImageInfo.file);
       }
       const res = await submitTrigger({
-        url: `${REGESTRATION_DATA}/${newId}?_method=PUT`,
+        url: `${UPDATE_MEMBER}/${memberId}?_method=PUT`,
         method: "post",
         data: formData,
         headers: {
@@ -139,10 +149,10 @@ const NewRegisterationForm = () => {
       });
       console.log(res, "res");
       if (res.code == 201) {
-        message.success(res.message || "Registration Updated!");
-        navigate("/new-registration-list");
+        message.success(res.message || "Member Updated!");
+        navigate("/life-member");
       } else {
-        message.error(res.message || "Failed to save registration.");
+        message.error(res.message || "Failed to save member.");
       }
     } catch (error) {
       message.error(error.response.data.message || "Something went wrong.");
@@ -196,7 +206,7 @@ const NewRegisterationForm = () => {
       }}
     >
       <Card
-        title={<CardHeader title="Update New Registration" />}
+        title={<CardHeader title="Update Member" />}
         extra={
           <Form.Item
             name="user_status"
@@ -316,8 +326,8 @@ const NewRegisterationForm = () => {
             <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
           </Form.Item>
           <Form.Item
-            label="User Type"
-            name="user_type"
+            label="Member Type"
+            name="user_member_type"
             rules={[{ required: true, message: "Please select user type" }]}
           >
             <Select placeholder="Select membership type" allowClear>

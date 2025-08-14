@@ -178,7 +178,7 @@ const EventTrackList = () => {
   return (
     <Card>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h2 className="text-2xl font-bold text-blue-500">Event Track List</h2>
+        <h2 className="text-2xl font-bold heading">Event Track List</h2>
 
         <div className="flex-1 flex gap-4 sm:justify-end">
           <Search

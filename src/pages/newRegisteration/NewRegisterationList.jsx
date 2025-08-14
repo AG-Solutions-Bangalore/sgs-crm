@@ -3,7 +3,7 @@ import {
   EditOutlined,
   EyeInvisibleOutlined,
   EyeOutlined,
-  UserSwitchOutlined
+  UserSwitchOutlined,
 } from "@ant-design/icons";
 import {
   App,
@@ -14,7 +14,7 @@ import {
   Space,
   Spin,
   Tag,
-  Tooltip
+  Tooltip,
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ const highlightMatch = (text, match) => {
       <mark
         key={index}
         style={{
-          backgroundColor: "#3B82F6", // Tailwind blue-500
+          backgroundColor: "#3B82F6", 
           color: "#fff",
           padding: "0 2px",
           borderRadius: "4px",
@@ -200,7 +200,7 @@ const NewRegisterationList = () => {
       dataIndex: "user_mobile",
       key: "user_mobile",
       render: (_, user) => (
-        <a href={`tel:${user.user_mobile}`}>
+        <a href={`tel:${user.user_mobile}`} className="heading">
           {highlightMatch(user.user_mobile, user._match)}
         </a>
       ),
@@ -295,9 +295,7 @@ const NewRegisterationList = () => {
   return (
     <Card
       title={
-        <h2 className="text-2xl font-bold text-blue-500">
-          New Registration List
-        </h2>
+        <h2 className="text-2xl font-bold heading">New Registration List</h2>
       }
       extra={
         <div className="flex-1 flex gap-4 sm:justify-end">

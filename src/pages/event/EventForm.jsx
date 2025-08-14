@@ -25,6 +25,10 @@ const membershipTypes = [
   { label: "Couple Membership", value: "Couple Membership" },
   { label: "Members", value: "Members" },
 ];
+const noofMember = [
+  { label: "One Card One Member", value: "One Card One Member" },
+  { label: "One Card Multi Member", value: "One Card Multi Member" },
+];
 
 const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
   const { message } = App.useApp();
@@ -49,16 +53,17 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
 
   const resetForm = () => {
     form.setFieldsValue({
-      event_name: "",
-      event_description: "",
-      event_payment: "",
-      event_amount: "",
-      event_from_date: "",
-      event_to_date: "",
+      event_name: undefined,
+      event_description: undefined,
+      event_payment: undefined,
+      event_amount: undefined,
+      event_from_date: undefined,
+      event_to_date: undefined,
       event_status: false,
-      event_member_allowed: "",
-      event_no_member_allowed: "",
+      event_member_allowed: undefined,
+      event_no_member_allowed: undefined,
     });
+
     setEventImageInfo({ file: null, preview: "" });
   };
 
@@ -89,10 +94,10 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
         event_amount: event.event_amount,
         event_member_allowed: event.event_member_allowed,
         event_no_member_allowed: event.event_no_member_allowed,
-        event_from_date: event.event_from_date
-          ? dayjs(event.event_from_date)
-          : null,
-        event_to_date: event.event_to_date ? dayjs(event.event_to_date) : null,
+        date_range: [
+          event.event_from_date ? dayjs(event.event_from_date) : null,
+          event.event_to_date ? dayjs(event.event_to_date) : null,
+        ],
         event_status: event.event_status == "Active",
       });
     } catch (err) {
@@ -186,7 +191,6 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
       target: "",
     });
   };
-
   return (
     <Modal
       open={open}
@@ -205,6 +209,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
           form={form}
           initialValues={{
             ...initialData,
+            event_no_member_allowed: undefined,
             event_from_date: initialData?.event_from_date
               ? dayjs(initialData?.event_from_date)
               : "",
@@ -219,7 +224,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
         >
           <Card
             title={
-              <h2 className="text-2xl font-bold text-blue-600">
+              <h2 className="text-2xl font-bold heading">
                 {isEditMode ? "Update Event" : "Create Event"}
               </h2>
             }
@@ -236,7 +241,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
             }
             bordered={false}
           >
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Form.Item
                 label={
                   <span>
@@ -249,13 +254,6 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                 <Input maxLength={50} />
               </Form.Item>
 
-              {/* <Form.Item label="From Date" name="event_from_date">
-                <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
-              </Form.Item>
-
-              <Form.Item label="To Date" name="event_to_date">
-                <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
-              </Form.Item> */}
               <Form.Item
                 label={
                   <span>
@@ -287,6 +285,8 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                   <Select.Option value="No">No</Select.Option>
                 </Select>
               </Form.Item>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               {paymentValue == "Yes" && (
                 <Form.Item
                   label={
@@ -324,7 +324,6 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                   ))}
                 </Select>
               </Form.Item>
-
               <Form.Item
                 label={
                   <span>
@@ -334,17 +333,20 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                 name="event_no_member_allowed"
                 rules={[
                   {
-                    pattern: /^\d+$/,
-                    message: "Please enter a valid  number",
-                  },
-                  {
                     required: true,
-                    message: "No of Member Allowed is required",
+                    message: "Selec No of Member Allowed ",
                   },
                 ]}
               >
-                <Input max={999} maxLength={3} />
+                <Select placeholder="Select Allowed Member " allowClear>
+                  {noofMember.map((type) => (
+                    <Option key={type.value} value={type.value}>
+                      {type.label}
+                    </Option>
+                  ))}
+                </Select>
               </Form.Item>
+
               <Form.Item
                 name="event_image"
                 label={
@@ -371,11 +373,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                 </div>
               </Form.Item>
             </div>
-            <Form.Item
-              label="Description"
-              name="event_description"
-              //   className="md:col-span-4"
-            >
+            <Form.Item label="Description" name="event_description">
               <Input.TextArea rows={4} />
             </Form.Item>
             <Form.Item className="text-center mt-6">

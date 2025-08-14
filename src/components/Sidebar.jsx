@@ -217,7 +217,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
       className={`h-full bg-white shadow-xl  overflow-hidden flex flex-col font-[Inter] transition-all duration-300
         ${isMobile ? "fixed z-50 h-screen" : "relative"}`}
     >
-      <div className="flex items-center justify-center h-14 px-4 bg-[#e6f2f2]">
+      <div className="flex items-center justify-center h-14 px-4 bg-gray-50">
         <motion.img
           src={collapsed ? logo1 : finalUserImage}
           alt="Logo"
@@ -225,7 +225,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.1 }}
           className={`object-contain transition-all duration-300 ${
-            collapsed ? "w-8" : "w-28 h-12"
+            collapsed ? "w-12" : ""
           }`}
         />
 
@@ -275,7 +275,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-xs text-gray-500  text-center border-t border-[#006666] bg-[#e6f2f2]"
+          className="text-xs text-gray-500  text-center border-t border-[#fb6332] bg-[#e6f2f2]"
         >
           {showDialog ? (
             <div

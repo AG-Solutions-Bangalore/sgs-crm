@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Drawer, ConfigProvider } from "antd";
 import Sidebar from "./Sidebar";
@@ -22,17 +21,31 @@ export default function Layout({ children }) {
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#2563EB", 
+          colorPrimary: "#fb6332",
         },
         components: {
           Menu: {
-            itemSelectedBg: "#2563EB",
+            itemSelectedBg: "#fb6332",
             itemSelectedColor: "#ffffff",
-            itemHoverColor: "#2563EB",
-            itemHoverBg: "#EFF6FF", 
+            itemHoverBg: "#fb7c55",
+            itemHoverColor: "#ffffff",
           },
         },
       }}
+
+      // theme={{
+      //   token: {
+      //     colorPrimary: "#2563EB",
+      //   },
+      //   components: {
+      //     Menu: {
+      //       itemSelectedBg: "#2563EB",
+      //       itemSelectedColor: "#ffffff",
+      //       itemHoverColor: "#2563EB",
+      //       itemHoverBg: "#EFF6FF",
+      //     },
+      //   },
+      // }}
     >
       <div className="flex h-screen overflow-hidden">
         {!isMobile && <Sidebar collapsed={collapsed} isMobile={isMobile} />}

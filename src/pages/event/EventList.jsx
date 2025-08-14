@@ -1,5 +1,12 @@
-import { EditOutlined, PlusOutlined, QrcodeOutlined } from "@ant-design/icons";
 import {
+  EditOutlined,
+  EyeInvisibleOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  QrcodeOutlined,
+} from "@ant-design/icons";
+import {
+  App,
   Button,
   Card,
   Input,
@@ -21,10 +28,14 @@ import EventTrackForm from "../eventtrack/EventTrackForm";
 import EventForm from "./EventForm";
 const { Search } = Input;
 const EventList = () => {
+  const { message } = App.useApp();
   const [openDialog, setOpenDialog] = useState(false);
   const [openQrDialog, setOpenQrDialog] = useState(false);
+  const [scanning, setScanning] = useState(false);
   const [openEventDialog, setOpenEventDialog] = useState(false);
+  const [multiMemberModal, setMultiMemberModal] = useState(false);
   const [eventId, setEventId] = useState(null);
+  const [NoofMember, setNoofMember] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { trigger, loading: isMutating } = useApiMutation();
   const [users, setUsers] = useState([]);
@@ -58,10 +69,17 @@ const EventList = () => {
     fetchUser();
   }, []);
 
+  const handleScannerClose = () => {
+    // setEventId(null);
+    setOpenQrDialog(false);
+    setScanning(false);
+    setMultiMemberModal(false);
+  };
   const handleScanner = (user) => {
-    console.log(user, "user");
     setEventId(user.id);
+    setNoofMember(user.event_no_member_allowed);
     setOpenQrDialog(true);
+    setScanning(true);
   };
   const handleEdit = (user) => {
     setEventId(user.id);
@@ -71,6 +89,32 @@ const EventList = () => {
   const handleAddUser = () => {
     setEventId(null);
     setOpenDialog(true);
+  };
+  const handleToggleStatus = async (user) => {
+    try {
+      const newStatus =
+        user.event_status == "Active" || user.event_status == true
+          ? "Inactive"
+          : "Active";
+      const res = await trigger({
+        url: `${EVENT}s/${user.id}/status`,
+        method: "patch",
+        data: { event_status: newStatus },
+      });
+
+      if (res?.code === 201) {
+        message.success(
+          res.message ||
+            `User marked as ${newStatus == "active" ? "Active" : "Inactive"}`
+        );
+        fetchUser();
+      } else {
+        message.error(res.message || "Failed to update user status.");
+      }
+    } catch (error) {
+      console.error("Error updating status:", error);
+      message.error(error.message || "Error updating user status.");
+    }
   };
   const highlightMatch = (text, match) => {
     if (!match || !text) return text;
@@ -174,13 +218,14 @@ const EventList = () => {
         return (
           <div className="flex justify-center">
             <Popconfirm
-              title={`Mark member as ${isActive ? "Inactive" : "Active"}?`}
+              title={`Mark Event as ${isActive ? "Inactive" : "Active"}?`}
               okText="Yes"
               cancelText="No"
+              onConfirm={() => handleToggleStatus(user)}
             >
               <Tag
                 color={isActive ? "green" : "red"}
-                // icon={isActive ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+                icon={isActive ? <EyeInvisibleOutlined /> : <EyeOutlined />}
                 className="cursor-pointer"
               >
                 {isActive ? "Active" : "Inactive"}
@@ -253,7 +298,7 @@ const EventList = () => {
   return (
     <Card>
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-        <h2 className="text-2xl font-bold text-blue-500">Event List</h2>
+        <h2 className="text-2xl font-bold heading">Event List</h2>
 
         <div className="flex-1 flex gap-4 sm:justify-end">
           <Search
@@ -290,13 +335,23 @@ const EventList = () => {
         fetchEvents={fetchUser}
       />
       <Modal
+        title="Scan"
         open={openQrDialog}
         footer={null}
-        onCancel={() => setOpenQrDialog(false)}
+        onCancel={handleScannerClose}
         centered
         width={420}
       >
-        <EventMidScanner eventId={eventId} setOpenQrDialog={setOpenQrDialog} />
+        <EventMidScanner
+          eventId={eventId}
+          setOpenQrDialog={setOpenQrDialog}
+          open={open}
+          setScanning={setScanning}
+          scanning={scanning}
+          NoofMember={NoofMember}
+          setMultiMemberModal={setMultiMemberModal}
+          multiMemberModal={multiMemberModal}
+        />
       </Modal>
       <EventTrackForm
         open={openEventDialog}

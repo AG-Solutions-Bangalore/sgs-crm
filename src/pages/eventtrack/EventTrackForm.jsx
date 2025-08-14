@@ -91,7 +91,7 @@ const EventTrackForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
       ) : (
         <Card
           title={
-            <h2 className="text-2xl font-bold text-blue-600">
+            <h2 className="text-2xl font-bold heading">
               {isEditMode ? "Update Event" : "Create Event"} Track
             </h2>
           }

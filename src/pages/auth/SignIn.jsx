@@ -5,6 +5,7 @@ import { PANEL_LOGIN } from "../../api";
 import useFinalUserImage from "../../components/common/Logo";
 import { useApiMutation } from "../../hooks/useApiMutation";
 import { setCredentials } from "../../store/auth/authSlice";
+import logo from "../../assets/logo-1.png";
 const { Title } = Typography;
 
 const SignIn = () => {
@@ -95,9 +96,8 @@ const SignIn = () => {
                 rules={[
                   { required: true, message: "Please enter your username" },
                 ]}
-                
               >
-                <Input size="large" placeholder="Enter username" autoFocus/>
+                <Input size="large" placeholder="Enter username" autoFocus />
               </Form.Item>
 
               <Form.Item
@@ -125,12 +125,11 @@ const SignIn = () => {
               </div>
             </Form>
           </div>
-
           <div className="hidden md:flex items-center justify-center">
             <img
-              src="https://img.freepik.com/free-vector/letter-s-j-creative-logo-design_474888-3771.jpg?t=st=1754888964~exp=1754892564~hmac=46d2d77befe78137ec831d2cffcd6ff0f8891c677536a9f99f8a1d4785b6d6a8&w=1060"
+              src={logo}
               alt="Login Illustration"
-              className="w-full h-full object-cover rounded-md"
+              className="w-60 h-60 object-contain rounded-md"
             />
           </div>
         </div>

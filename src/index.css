@@ -23,18 +23,25 @@ body {
 /* Ant Menu Item Style - Keep animations and rounding only */
 .custom-menu .ant-menu-item,
 .custom-menu .ant-menu-submenu-title {
-  border-radius: 100px;
+  /* border-radius: 100px;
+   */
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
   margin: 4px;
   transition: all 0.2s;
 }
 
 .custom-menu .ant-menu-item:hover,
 .custom-menu .ant-menu-submenu-title:hover {
-  border-radius: 100px;
+  /* border-radius: 100px; */
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
 }
 
 .custom-menu .ant-menu-item-selected {
-  border-radius: 100px;
+  /* border-radius: 100px;*/
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
 }
 
 /* Icon hover effects (keep if desired) */
@@ -50,24 +57,43 @@ body {
 
 /* Submenu items */
 .ant-menu-submenu-popup .ant-menu-item-selected {
-  border-radius: 100px !important;
+  /* border-radius: 100px !important; */
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
 }
 .ant-menu-submenu-popup .ant-menu-item {
-  border-radius: 100px !important;
+  /* border-radius: 100px !important; */
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
   overflow: hidden;
   transition: all 0.2s;
 }
 .ant-menu-submenu-popup .ant-menu-item::after {
-  border-radius: 100px !important;
+  /* border-radius: 100px !important; */
+  border-top-right-radius: 100px;
+  border-bottom-right-radius: 100px;
 }
 .ant-menu-submenu-popup .ant-menu-item:hover .anticon {
   transform: scale(1.2);
   transition: transform 0.2s ease;
 }
 .ant-table-wrapper .ant-table-thead > tr > th {
-  background-color: #BFDBFE; 
+  background-color: #fb6332;
+  color: #ffffff !important;
+}
+/* Force submenu hover text to be white */
+.ant-menu-light .ant-menu-submenu-title:hover {
+  color: #ffffff !important;
 }
 
+/* Optional: also for open submenu items */
+.ant-menu-light .ant-menu-submenu-selected > .ant-menu-submenu-title {
+  color: #ffffff !important;
+  background-color: #fb6332 !important;
+}
+.heading {
+  color: #fb6332 !important;
+}
 /* Scrollbar */
 .scrollbar-custom {
   overflow: auto;

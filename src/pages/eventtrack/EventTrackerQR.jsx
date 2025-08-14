@@ -1,17 +1,22 @@
-import React, { useState, useRef, useEffect } from "react";
 import { Scanner } from "@yudiel/react-qr-scanner";
-import { Button, Card, Typography, App } from "antd";
+import { App, Card, Spin, Modal, InputNumber, Button } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useRef, useState } from "react";
 import { EVENT_TRACK } from "../../api";
 import { useApiMutation } from "../../hooks/useApiMutation";
-import dayjs from "dayjs";
 
-const { Title, Paragraph } = Typography;
-
-const EventMidScanner = ({ eventId, setOpenQrDialog }) => {
+const EventMidScanner = ({
+  eventId,
+  setOpenQrDialog,
+  scanning,
+  NoofMember,
+  setMultiMemberModal,
+  multiMemberModal,
+}) => {
   const { message } = App.useApp();
-  console.log(eventId, "eventId");
-  const [scanning, setScanning] = useState(false);
   const [scanResult, setScanResult] = useState("");
+  const [peopleCount, setPeopleCount] = useState(1);
+  const [midValueState, setMidValueState] = useState(null);
   const timeoutRef = useRef(null);
   const { trigger: submitTrigger, loading: submitLoading } = useApiMutation();
 
@@ -20,6 +25,35 @@ const EventMidScanner = ({ eventId, setOpenQrDialog }) => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
+
+  const submitEvent = async (midValue, count) => {
+    const payload = {
+      event_no_of_people: count,
+      event_id: eventId || 1,
+      event_member_mid: midValue,
+      event_entry_date: dayjs().format("YYYY-MM-DD"),
+    };
+
+    try {
+      const res = await submitTrigger({
+        url: EVENT_TRACK,
+        method: "post",
+        data: payload,
+      });
+
+      if (res.code === 201) {
+        message.success(res.message || "Event saved!");
+        setOpenQrDialog(false);
+      } else {
+        message.error(res.message || "Failed to save event.");
+      }
+    } catch (error) {
+      message.error(
+        error?.response?.data?.message || "Error submitting event."
+      );
+      console.error(error);
+    }
+  };
 
   const handleScan = async (detectedCodes) => {
     if (detectedCodes && detectedCodes.length > 0) {
@@ -35,35 +69,12 @@ const EventMidScanner = ({ eventId, setOpenQrDialog }) => {
           return;
         }
 
-        const payload = {
-          event_no_of_people: 1,
-          event_id: eventId || 1,
-          event_member_mid: midValue,
-          event_entry_date: dayjs().format("YYYY-MM-DD"),
-        };
-
-        try {
-          const res = await submitTrigger({
-            url: EVENT_TRACK,
-            method: "post",
-            data: payload,
-          });
-
-          if (res.code === 201) {
-            message.success(res.message || "Event saved!");
-            setOpenQrDialog(false);
-            fetchEvents();
-          } else {
-            message.error(res.message || "Failed to save event.");
-          }
-        } catch (error) {
-          message.error(
-            error.response.data.message || "Error submitting event."
-          );
-          console.error(error);
+        if (NoofMember == "One Card One Member") {
+          submitEvent(midValue, 1);
+        } else if (NoofMember == "One Card Multi Member") {
+          setMultiMemberModal(true);
+          setMidValueState(midValue);
         }
-
-        setScanning(false);
       } else {
         message.error("MID not found in scanned code.");
       }
@@ -81,32 +92,63 @@ const EventMidScanner = ({ eventId, setOpenQrDialog }) => {
   };
 
   return (
-    <Card style={{ maxWidth: 400, margin: "20px auto", textAlign: "center" }}>
-      <Title level={4}>Scan MID QR Code</Title>
-      {!scanning && (
-        <Button type="primary" onClick={() => setScanning(true)}>
-          Start Scan
-        </Button>
-      )}
-
-      {scanning && (
+    <>
+      {submitLoading ? (
+        <Card
+          style={{
+            maxWidth: 400,
+            minHeight: 260,
+            margin: "20px auto",
+            textAlign: "center",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Spin />
+        </Card>
+      ) : (
         <>
-          <Scanner
-            onScan={handleScan}
-            onError={handleError}
-            className="scanner"
-            styles={{
-              container: { width: "100%", maxWidth: "400px", margin: "auto" },
-              video: { width: "100%", height: "auto" },
-            }}
-          />
-          <Button style={{ marginTop: 10 }} onClick={() => setScanning(false)}>
-            Stop Scan
-          </Button>
+          {scanning && (
+            <Scanner
+              onScan={handleScan}
+              onError={handleError}
+              className="scanner"
+              styles={{
+                container: { width: "100%", maxWidth: "400px", margin: "auto" },
+                video: { width: "100%", height: "auto" },
+              }}
+            />
+          )}
         </>
       )}
-      {submitLoading && <h1>loading</h1>}
-    </Card>
+
+      {/* Multi Member Input Modal */}
+      <Modal
+        open={multiMemberModal}
+        title="Enter Number of People"
+        onCancel={() => setMultiMemberModal(false)}
+        footer={null}
+      >
+        <InputNumber
+          min={1}
+          max={20}
+          value={peopleCount}
+          onChange={(val) => setPeopleCount(val)}
+          style={{ width: "100%", marginBottom: "1rem" }}
+        />
+        <Button
+          type="primary"
+          block
+          onClick={() => {
+            submitEvent(midValueState, peopleCount);
+            setMultiMemberModal(false);
+          }}
+        >
+          Submit
+        </Button>
+      </Modal>
+    </>
   );
 };
 

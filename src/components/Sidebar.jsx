@@ -55,21 +55,27 @@ const getMenuItems = (collapsed) => {
       label: "Member",
       children: [
         {
-          key: "/member",
+          key: "/report-life-member",
           icon: <ProfileOutlined />,
           label: "Life Membership",
         },
         {
-          key: "/couple-member",
+          key: "/report-couple-member",
           icon: <ProfileOutlined />,
           label: "Couple Membership",
         },
         {
-          key: "/",
+          key: "/report-truste-member",
           icon: <ProfileOutlined />,
-          label: "Trust",
+          label: "Trustee",
         },
       ],
+    },
+
+    {
+      key: "/report-event",
+      icon: <CarOutlined />,
+      label: "Event",
     },
   ];
 
@@ -217,7 +223,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
       className={`h-full bg-white shadow-xl  overflow-hidden flex flex-col font-[Inter] transition-all duration-300
         ${isMobile ? "fixed z-50 h-screen" : "relative"}`}
     >
-      <div className="flex items-center justify-center h-14 px-4 bg-gray-50">
+      <div className="flex items-center justify-center h-14 px-4 !bg-orange-50">
         <motion.img
           src={collapsed ? logo1 : finalUserImage}
           alt="Logo"
@@ -275,7 +281,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-xs text-gray-500  text-center border-t border-[#fb6332] bg-[#e6f2f2]"
+          className="text-xs text-gray-500 text-center border-t border-[#fb6332] bg-white"
         >
           {showDialog ? (
             <div
@@ -291,10 +297,10 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                 }
-                type="info"
-                showIcon={false}
+                type="warning"
                 banner
-                className="rounded-md bg-blue-50 text-blue-800 border-blue-100 px-4 py-1 text-center"
+                showIcon={false}
+                className="rounded-md !bg-orange-50 !text-orange-800 !border-orange-200 px-4 py-1"
               />
             </div>
           ) : (
@@ -307,14 +313,14 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 08-08-2025
+                    Updated on: 19-08-2025
                   </div>
                 </div>
               }
               type="info"
-              showIcon={false}
               banner
-              className="rounded-md bg-blue-50 text-blue-800 border-blue-100 px-4 py-1"
+              showIcon={false}
+              className="rounded-md !bg-orange-50 !text-orange-800 !border-orange-200 px-4 py-1"
             />
           )}
         </motion.div>

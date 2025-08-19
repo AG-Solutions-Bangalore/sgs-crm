@@ -1,20 +1,18 @@
 import { ConfigProvider, App as AntdApp } from "antd";
 
 const AppThemeProvider = ({ children }) => {
-
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: "#2563EB",
-          // colorPrimary: "#1c8fc7",
+          colorPrimary: "#fb6332",
         },
         components: {
           Menu: {
-            itemSelectedBg: "#2563EB",
+            itemSelectedBg: "#fb6332",
             itemSelectedColor: "#ffffff",
-            itemHoverColor: "#2563EB",
-            itemHoverBg: "#EFF6FF",
+            itemHoverBg: "#fb7c55",
+            itemHoverColor: "#ffffff",
           },
         },
       }}

@@ -1,18 +1,21 @@
+import dayjs from "dayjs";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
-export const exportCategoryReportToExcel = async (
-  data,
-  title = "Category Report"
-) => {
+export const exportEventReportToExcel = async (data, title = "Report") => {
   const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet("Category Report");
+  const worksheet = workbook.addWorksheet("Report");
 
   // Define columns
   const columns = [
-    { header: "Name", key: "name", width: 25 },
-    { header: "Description", key: "description", width: 60 },
-    { header: "Sort Order", key: "sortOrder", width: 15 },
+    { header: "Name", key: "event_name", width: 25 },
+    { header: "Allowed", key: "event_member_allowed", width: 25 },
+    { header: "No of Member", key: "event_no_member_allowed", width: 25 },
+    { header: "From Date", key: "event_from_date", width: 25 },
+    { header: "To Date", key: "event_to_date", width: 25 },
+    { header: "Payment", key: "event_payment", width: 25 },
+    { header: "Amount", key: "event_amount", width: 25 },
+    { header: "Total", key: "total_people", width: 25 },
   ];
   worksheet.columns = columns;
 
@@ -50,11 +53,19 @@ export const exportCategoryReportToExcel = async (
   // ----- DATA ROWS -----
   data.forEach((item, i) => {
     const row = worksheet.getRow(i + 3);
-    const isInactive = item.is_active === "false";
-
-    row.getCell(1).value = item.category_name ?? "";
-    row.getCell(2).value = item.category_description ?? "";
-    row.getCell(3).value = item.category_sort_order ?? "";
+    const isActive = item.event_status == "Active";
+    row.getCell(1).value = item.event_name ?? "";
+    row.getCell(2).value = item.event_member_allowed ?? "";
+    row.getCell(3).value = item.event_no_member_allowed ?? "";
+    row.getCell(4).value = item.event_from_date
+      ? dayjs(item.event_from_date).format("DD-MMM-YYYY")
+      : "";
+    row.getCell(5).value = item.event_to_date
+      ? dayjs(item.event_to_date).format("DD-MMM-YYYY")
+      : "";
+    row.getCell(6).value = item.event_payment;
+    row.getCell(7).value = item.event_amount;
+    row.getCell(8).value = item.total_people;
 
     for (let j = 1; j <= columnCount; j++) {
       const cell = row.getCell(j);
@@ -62,16 +73,16 @@ export const exportCategoryReportToExcel = async (
         vertical: "middle",
         horizontal: j === 3 ? "right" : "left",
         indent: 1,
-        wrapText: true, // ✅ This enables multiline text wrapping
+        wrapText: true,
       };
     }
 
-    if (isInactive) {
+    if (isActive) {
       row.eachCell((cell) => {
         cell.fill = {
           type: "pattern",
           pattern: "solid",
-          fgColor: { argb: "ffe5e5" },
+          fgColor: { argb: "90EE90" },
         };
       });
     }

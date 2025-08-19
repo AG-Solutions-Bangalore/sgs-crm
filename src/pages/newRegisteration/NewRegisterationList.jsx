@@ -37,7 +37,7 @@ const highlightMatch = (text, match) => {
       <mark
         key={index}
         style={{
-          backgroundColor: "#3B82F6", 
+          backgroundColor: "#3B82F6",
           color: "#fff",
           padding: "0 2px",
           borderRadius: "4px",
@@ -127,6 +127,7 @@ const NewRegisterationList = () => {
 
       if (res?.code === 201) {
         message.success(res.message || "Deleted user successfully.");
+        fetchUser();
       } else {
         message.error(res.message || "Failed to deleted user status.");
       }

@@ -95,7 +95,6 @@ const VersionCheck = () => {
             </Button>
             <Button
               type="primary"
-              danger
               loading={loading}
               onClick={handleLogout}
             >

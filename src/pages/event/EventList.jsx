@@ -4,6 +4,7 @@ import {
   EyeOutlined,
   PlusOutlined,
   QrcodeOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import {
   App,
@@ -26,8 +27,10 @@ import { useApiMutation } from "../../hooks/useApiMutation";
 import EventMidScanner from "../eventtrack/EventTrackerQR";
 import EventTrackForm from "../eventtrack/EventTrackForm";
 import EventForm from "./EventForm";
+import { useNavigate } from "react-router-dom";
 const { Search } = Input;
 const EventList = () => {
+  const navigate = useNavigate();
   const { message } = App.useApp();
   const [openDialog, setOpenDialog] = useState(false);
   const [openQrDialog, setOpenQrDialog] = useState(false);
@@ -258,6 +261,7 @@ const EventList = () => {
                 onClick={() => handleEdit(user)}
               />
             </Tooltip>
+
             <Tooltip title="Add Tracker">
               <Button
                 type="primary"
@@ -274,6 +278,14 @@ const EventList = () => {
                 size="small"
                 onClick={() => handleScanner(user)}
                 disabled={!isActivePeriod}
+              />
+            </Tooltip>
+            <Tooltip title="View Attend Member">
+              <Button
+                type="primary"
+                icon={<UserOutlined />}
+                size="small"
+                onClick={() => navigate(`/event-attend-member/${user.id}`)}
               />
             </Tooltip>
           </Space>

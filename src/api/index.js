@@ -31,6 +31,16 @@ export const UPDATE_USER_STATUS = `/panel-update-users-status`;
 export const PAYMENT_MODE = `/panel-fetch-payment-mode`;
 //EVENT_TRACK
 export const EVENT_TRACK = `/event-member-track`;
+//MEMBER_REPORT
+export const MEMBER_REPORT = `/panel-fetch-member-report`;
+//EVENT_REPORT
+export const EVENT_REPORT = `/panel-fetch-event-report`;
+//EVENT_DETAIILS_REPORT
+export const EVENT_DETAIILS_REPORT = `/panel-fetch-event-details-report`;
+//EVENT_REGISTER_NOTSCANNED_REPORT
+export const EVENT_REGISTER_NOTSCANNED_REPORT = `/panel-fetch-event-register-notscanned-report`;
+//EVENT_NOTREGISTER_NOTSCANNED_REPORT
+export const EVENT_NOTREGISTER_NOTSCANNED_REPORT = `/panel-fetch-event-notregister-notscanned-report`;
 
 // -----------------Old------------------
 //PROFILE

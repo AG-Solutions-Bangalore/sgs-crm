@@ -77,6 +77,22 @@ const getMenuItems = (collapsed) => {
       icon: <CarOutlined />,
       label: "Event",
     },
+
+    {
+      key: "/report-event-details",
+      icon: <CarOutlined />,
+      label: "Event Details",
+    },
+    {
+      key: "/report-register-notscanned",
+      icon: <CarOutlined />,
+      label: "Registered Not Scanned",
+    },
+    {
+      key: "/report-notregister-notscanned",
+      icon: <CarOutlined />,
+      label: "Not Registered Not Scanned",
+    },
   ];
 
   if (collapsed) {
@@ -313,7 +329,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 19-08-2025
+                    Updated on: 23-08-2025
                   </div>
                 </div>
               }

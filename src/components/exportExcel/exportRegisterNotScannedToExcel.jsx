@@ -1,24 +1,30 @@
+import dayjs from "dayjs";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
-export const exportProductTOExcel = async (data, title = "Product Report") => {
+export const exportRegisterNotScannedToExcel = async (
+  data,
+  title = "Report"
+) => {
   const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet("Product Report");
+  const worksheet = workbook.addWorksheet("Report");
 
   // Define columns
   const columns = [
-    { header: "Product Name", key: "product_name", width: 30 },
-    { header: "Brand", key: "product_brand", width: 30 },
-    { header: "Unit", key: "unit_combined", width: 15 },
-    { header: "MRP", key: "product_mrp", width: 15 },
-    { header: "Selling Price", key: "product_selling_price", width: 15 },
-    { header: "Offer Price", key: "product_spl_offer_price", width: 15 },
+    { header: "Name", key: "event_name", width: 25 },
+    { header: "Allowed", key: "event_member_allowed", width: 25 },
+    { header: "No of Member", key: "event_no_member_allowed", width: 25 },
+    { header: "From Date", key: "event_from_date", width: 25 },
+    { header: "To Date", key: "event_to_date", width: 25 },
+    { header: "Payment", key: "event_payment", width: 25 },
+    { header: "Amount", key: "event_amount", width: 25 },
+    { header: "Total", key: "total_people", width: 25 },
   ];
   worksheet.columns = columns;
 
   const columnCount = columns.length;
 
-  // ----- TITLE ROW (Row 1) -----
+  // ----- TITLE ROW -----
   worksheet.mergeCells(1, 1, 1, columnCount);
   const titleCell = worksheet.getCell("A1");
   titleCell.value = title;
@@ -31,7 +37,7 @@ export const exportProductTOExcel = async (data, title = "Product Report") => {
   };
   worksheet.getRow(1).height = 30;
 
-  // ----- HEADER ROW (Row 2) -----
+  // ----- HEADER ROW -----
   const headerRow = worksheet.getRow(2);
   columns.forEach((col, index) => {
     const cell = headerRow.getCell(index + 1);
@@ -50,33 +56,36 @@ export const exportProductTOExcel = async (data, title = "Product Report") => {
   // ----- DATA ROWS -----
   data.forEach((item, i) => {
     const row = worksheet.getRow(i + 3);
-    const values = [
-      item.product_name,
-      item.product_brand,
-      `${item.product_unit_value} ${item.unit}`,
-      item.product_mrp,
-      item.product_selling_price,
-      item.product_spl_offer_price,
-    ];
+    const isActive = item.event_status == "Active";
+    row.getCell(1).value = item.event_name ?? "";
+    row.getCell(2).value = item.event_member_allowed ?? "";
+    row.getCell(3).value = item.event_no_member_allowed ?? "";
+    row.getCell(4).value = item.event_from_date
+      ? dayjs(item.event_from_date).format("DD-MMM-YYYY")
+      : "";
+    row.getCell(5).value = item.event_to_date
+      ? dayjs(item.event_to_date).format("DD-MMM-YYYY")
+      : "";
+    row.getCell(6).value = item.event_payment;
+    row.getCell(7).value = item.event_amount;
+    row.getCell(8).value = item.total_people;
 
-    values.forEach((val, colIndex) => {
-      const cell = row.getCell(colIndex + 1);
-      cell.value = val ?? "";
+    for (let j = 1; j <= columnCount; j++) {
+      const cell = row.getCell(j);
       cell.alignment = {
         vertical: "middle",
-        horizontal: colIndex >= 3 ? "right" : "left", // right-align prices
+        horizontal: j === 3 ? "right" : "left",
         indent: 1,
         wrapText: true,
       };
-    });
+    }
 
-    // Optional: highlight inactive rows
-    if (item.is_active === "false") {
+    if (isActive) {
       row.eachCell((cell) => {
         cell.fill = {
           type: "pattern",
           pattern: "solid",
-          fgColor: { argb: "ffe5e5" }, // light red
+          fgColor: { argb: "90EE90" },
         };
       });
     }

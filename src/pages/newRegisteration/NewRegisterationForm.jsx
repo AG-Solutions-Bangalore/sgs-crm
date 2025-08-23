@@ -137,7 +137,6 @@ const NewRegisterationForm = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res, "res");
       if (res.code == 201) {
         message.success(res.message || "Registration Updated!");
         navigate("/new-registration-list");
@@ -163,11 +162,9 @@ const NewRegisterationForm = () => {
   };
 
   const handleCroppedImage = ({ blob, fileUrl }) => {
-    console.log(blob, "blob");
     const file = new File([blob], cropState.tempFileName || "image.jpg", {
       type: blob.type,
     });
-    console.log(file, "file");
     if (cropState.target == "user") {
       setUserImageInfo({ file, preview: fileUrl });
     } else if (cropState.target == "spouse") {

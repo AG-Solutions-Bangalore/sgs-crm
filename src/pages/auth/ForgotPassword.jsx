@@ -30,7 +30,6 @@ const ForgotPassword = () => {
         method: "post",
         data: formData,
       });
-      console.log(res.code);
       if (res.code == 200) {
         message.success(res.message || "Sucess");
       } else {

@@ -6,40 +6,70 @@ import ProtectedLayout from "./components/ProtectedLayout";
 import VersionCheck from "./components/VersionCheck";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import SignIn from "./pages/auth/SignIn";
-import DeliveryList from "./pages/delivery/DeliveryList";
 import EventAttendMember from "./pages/event/EventAttendMember";
 import EventList from "./pages/event/EventList";
 import EvenRegisterList from "./pages/eventregister/EventRegisterList";
 import EventDetailsPage from "./pages/eventtrack/EventDetailsPage";
 import EventTrackList from "./pages/eventtrack/EventTrackList";
-import GuestUserList from "./pages/guestuser/GuestUserList";
-import GuestUserOrderForm from "./pages/guestuserorder/GuestUserOrderForm";
-import GuestUserOrderList from "./pages/guestuserorder/GuestUserOrderList";
 import Dashboard from "./pages/home/Dashboard";
 import CoupleMembersPage from "./pages/member/CoupleMembersPage";
 import LifeMembersPage from "./pages/member/LifeMembersPage";
 import TrusteMemberPage from "./pages/member/TrusteMemberPage";
 import NewRegisterationForm from "./pages/newRegisteration/NewRegisterationForm";
 import NewRegisterationList from "./pages/newRegisteration/NewRegisterationList";
-import Notification from "./pages/notification/Notification";
-import OrderForm from "./pages/order/OrderForm";
-import OrderList from "./pages/order/OrderList";
-import ProductForm from "./pages/product/ProductForm";
-import ProductList from "./pages/product/ProductList";
-import UserPage from "./pages/profile/Profile";
+import EventDetailsReport from "./pages/report/EventDetailsReport/EventDetailsReport";
 import EventReport from "./pages/report/EventReport/EventReport";
 import CoupleMemberReport from "./pages/report/MemberReport/CoupleMemberReport";
 import LifeMemberReport from "./pages/report/MemberReport/LifeMemberReport";
 import TrusteeMemberReport from "./pages/report/MemberReport/TrusteeMemberReport";
-import OrderReport from "./pages/report/Orderreport/Orderreport";
-import ProductCategoryReport from "./pages/report/ProductCategoryReport/ProductCategoryReport";
-import ProductReport from "./pages/report/ProductReport/ProductReport";
-import SecurityList from "./pages/security/SecurityList";
-import SliderList from "./pages/slider/SliderList";
-import StaffList from "./pages/staff/StaffList";
-import UserForm from "./pages/user/UserForm";
-import UserList from "./pages/user/UserList";
-import WebsiteEnquiry from "./pages/websiteenquiry/WebsiteEnquiry";
+import NotRegisterNotScanned from "./pages/report/NotregisteredNotScanned/NotRegisterNotScanned";
+import RegisteredNotScanned from "./pages/report/registerednotscanned/RegisteredNotScanned";
+
+// import { Route, Routes } from "react-router-dom";
+// import AppInitializer from "./components/AppInitializer";
+// import MaintenancePage from "./components/common/MaintenancePage";
+// import MemberForm from "./components/MemberList/MemberForm";
+// import ProtectedLayout from "./components/ProtectedLayout";
+// import VersionCheck from "./components/VersionCheck";
+// import ForgotPassword from "./pages/auth/ForgotPassword";
+// import SignIn from "./pages/auth/SignIn";
+// import DeliveryList from "./pages/delivery/DeliveryList";
+// import EventAttendMember from "./pages/event/EventAttendMember";
+// import EventList from "./pages/event/EventList";
+// import EvenRegisterList from "./pages/eventregister/EventRegisterList";
+// import EventDetailsPage from "./pages/eventtrack/EventDetailsPage";
+// import EventTrackList from "./pages/eventtrack/EventTrackList";
+// import GuestUserList from "./pages/guestuser/GuestUserList";
+// import GuestUserOrderForm from "./pages/guestuserorder/GuestUserOrderForm";
+// import GuestUserOrderList from "./pages/guestuserorder/GuestUserOrderList";
+// import Dashboard from "./pages/home/Dashboard";
+// import CoupleMembersPage from "./pages/member/CoupleMembersPage";
+// import LifeMembersPage from "./pages/member/LifeMembersPage";
+// import TrusteMemberPage from "./pages/member/TrusteMemberPage";
+// import NewRegisterationForm from "./pages/newRegisteration/NewRegisterationForm";
+// import NewRegisterationList from "./pages/newRegisteration/NewRegisterationList";
+// import Notification from "./pages/notification/Notification";
+// import OrderForm from "./pages/order/OrderForm";
+// import OrderList from "./pages/order/OrderList";
+// import ProductForm from "./pages/product/ProductForm";
+// import ProductList from "./pages/product/ProductList";
+// import UserPage from "./pages/profile/Profile";
+// import EventDetailsReport from "./pages/report/EventDetailsReport/EventDetailsReport";
+// import EventReport from "./pages/report/EventReport/EventReport";
+// import CoupleMemberReport from "./pages/report/MemberReport/CoupleMemberReport";
+// import LifeMemberReport from "./pages/report/MemberReport/LifeMemberReport";
+// import TrusteeMemberReport from "./pages/report/MemberReport/TrusteeMemberReport";
+// import NotRegisterNotScanned from "./pages/report/NotregisteredNotScanned/NotRegisterNotScanned";
+// import OrderReport from "./pages/report/Orderreport/Orderreport";
+// import ProductCategoryReport from "./pages/report/ProductCategoryReport/ProductCategoryReport";
+// import ProductReport from "./pages/report/ProductReport/ProductReport";
+// import RegisteredNotScanned from "./pages/report/registerednotscanned/RegisteredNotScanned";
+// import SecurityList from "./pages/security/SecurityList";
+// import SliderList from "./pages/slider/SliderList";
+// import StaffList from "./pages/staff/StaffList";
+// import UserForm from "./pages/user/UserForm";
+// import UserList from "./pages/user/UserList";
+// import WebsiteEnquiry from "./pages/websiteenquiry/WebsiteEnquiry";
 
 function App() {
   return (
@@ -94,9 +124,21 @@ function App() {
                   element={<TrusteeMemberReport />}
                 />
                 <Route path="/report-event" element={<EventReport />} />
+                <Route
+                  path="/report-event-details"
+                  element={<EventDetailsReport />}
+                />
+                <Route
+                  path="/report-register-notscanned"
+                  element={<RegisteredNotScanned />}
+                />
+                <Route
+                  path="/report-notregister-notscanned"
+                  element={<NotRegisterNotScanned />}
+                />
 
                 {/* ////////////////////// */}
-
+                {/* 
                 <Route path="/user-form" element={<UserPage />} />
                 <Route path="/user-create" element={<UserForm />} />
                 <Route path="/user-edit/:id" element={<UserForm />} />
@@ -128,12 +170,12 @@ function App() {
                 <Route path="/product-edit/:id" element={<ProductForm />} />
                 <Route path="/website-enquiry" element={<WebsiteEnquiry />} />
                 <Route path="/report-order" element={<OrderReport />} />
-       
+
                 <Route path="/report-product" element={<ProductReport />} />
                 <Route
                   path="/report-product-category"
                   element={<ProductCategoryReport />}
-                />
+                /> */}
 
                 {/* Add more protected routes here */}
               </Routes>

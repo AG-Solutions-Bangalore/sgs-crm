@@ -169,7 +169,7 @@ const NotRegisterNotScanned = () => {
           <div className="flex justify-center py-20">
             <Spin size="large" />
           </div>
-        ) : eventdetails ? (
+        ) : eventdetails.event_name ? (
           <>
             <div className="flex justify-between mb-2">
               <h2 className="text-xl font-semibold">

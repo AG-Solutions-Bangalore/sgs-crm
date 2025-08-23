@@ -93,7 +93,11 @@ const RegisteredNotScanned = () => {
               shape="circle"
               icon={<FilePdfOutlined />}
               onClick={() =>
-                downloadPDF("printable-section", "Register_NotScanned.pdf", message)
+                downloadPDF(
+                  "printable-section",
+                  "Register_NotScanned.pdf",
+                  message
+                )
               }
             />
           </Tooltip>
@@ -161,61 +165,66 @@ const RegisteredNotScanned = () => {
           <div className="flex justify-center py-20">
             <Spin size="large" />
           </div>
-        ) : eventdetailsData.length > 0 ? (
+        ) : eventdetails.event_name ? (
           <>
             <div className="flex justify-between mb-2">
-              <h2 className="text-xl font-semibold">Register NotScanned Report</h2>
+              <h2 className="text-xl font-semibold">
+                Register NotScanned Report
+              </h2>
               <h2>Total:{eventdetailsData.length || 0}</h2>
             </div>
             <EventCard eventdetails={eventdetails} />
-
-            <table
-              className="w-full border rounded-md table-fixed text-[14px]"
-              style={{ width: "100%", borderCollapse: "collapse" }}
-            >
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-3 py-2 text-center ">MID</th>
-                  <th className="px-3 py-2 text-center ">Payment Type</th>
-                  <th className="px-3 py-2 text-center ">Transaction</th>
-                  <th className="px-3 py-2 text-center ">No of People</th>
-                  <th className="px-3 py-2 text-center ">Name</th>
-                  <th className="px-3 py-2 text-center">Mobile</th>
-                  <th className="px-3 py-2 text-center  ">Member Type</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {eventdetailsData.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="border-t"
-                    style={{
-                      pageBreakInside: "avoid",
-                    }}
-                  >
-                    {" "}
-                    <td className="px-3 py-2 text-center">
-                      {item.event_register_mid}
-                    </td>
-                    <td className="px-3 py-2 text-center">
-                      {item.event_register_payment_type}
-                    </td>
-                    <td className="px-3 py-2 text-center">
-                      {item.event_register_transaction}
-                    </td>
-                    <td className="px-3 py-2 text-center">
-                      {item.event_no_of_people}
-                    </td>{" "}
-                    <td className="px-3 py-2 text-center">{item.name}</td>
-                    <td className="px-3 py-2 text-center ">{item.mobile}</td>
-                    <td className="px-3 py-2 text-center ">
-                      {item.user_member_type}
-                    </td>
+            {eventdetailsData.length > 0 ? (
+              <table
+                className="w-full border rounded-md table-fixed text-[14px]"
+                style={{ width: "100%", borderCollapse: "collapse" }}
+              >
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="px-3 py-2 text-center ">MID</th>
+                    <th className="px-3 py-2 text-center ">Payment Type</th>
+                    <th className="px-3 py-2 text-center ">Transaction</th>
+                    <th className="px-3 py-2 text-center ">No of People</th>
+                    <th className="px-3 py-2 text-center ">Name</th>
+                    <th className="px-3 py-2 text-center">Mobile</th>
+                    <th className="px-3 py-2 text-center  ">Member Type</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+
+                <tbody>
+                  {eventdetailsData.map((item) => (
+                    <tr
+                      key={item.id}
+                      className="border-t"
+                      style={{
+                        pageBreakInside: "avoid",
+                      }}
+                    >
+                      {" "}
+                      <td className="px-3 py-2 text-center">
+                        {item.event_register_mid}
+                      </td>
+                      <td className="px-3 py-2 text-center">
+                        {item.event_register_payment_type}
+                      </td>
+                      <td className="px-3 py-2 text-center">
+                        {item.event_register_transaction}
+                      </td>
+                      <td className="px-3 py-2 text-center">
+                        {item.event_no_of_people}
+                      </td>{" "}
+                      <td className="px-3 py-2 text-center">{item.name}</td>
+                      <td className="px-3 py-2 text-center ">{item.mobile}</td>
+                      <td className="px-3 py-2 text-center ">
+                        {item.user_member_type}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="text-center text-gray-500 py-20"></div>
+            )}
           </>
         ) : (
           <div className="text-center text-gray-500 py-20">No data found.</div>

@@ -1,4 +1,4 @@
-import { Row, Col, Typography, Tag } from "antd";
+import { Col, Row, Typography } from "antd";
 import dayjs from "dayjs";
 
 const { Text } = Typography;
@@ -6,8 +6,6 @@ const { Text } = Typography;
 export default function EventCard({ eventdetails }) {
   const statusColor =
     eventdetails.event_status === "Active" ? "#d9f7be" : "#ffa39e";
-  const headerColor =
-    eventdetails.event_status === "Active" ? "#52c41a" : "#f5222d";
   const gridItemStyle = {
     border: "1px solid #f0f0f0",
     padding: "4px 16px",
@@ -20,7 +18,6 @@ export default function EventCard({ eventdetails }) {
   return (
     <div
       style={{
-        // maxWidth: 650,
         margin: "20px auto",
         border: "1px solid #d9d9d9",
         borderRadius: 12,
@@ -31,7 +28,6 @@ export default function EventCard({ eventdetails }) {
       {/* Title */}
       <div
         style={{
-          background: "#fafafa",
           padding: "12px 16px",
           borderBottom: "1px solid #f0f0f0",
           background: statusColor,

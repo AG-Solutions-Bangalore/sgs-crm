@@ -2,7 +2,6 @@ import { App, Card, Input, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MEMBER_DATA, UPDATE_USER_STATUS } from "../../api";
-import usetoken from "../../api/usetoken";
 import { useApiMutation } from "../../hooks/useApiMutation";
 import MemberTable from "./MemberTable";
 
@@ -24,7 +23,6 @@ const MemberList = ({ title, userTypeFilter }) => {
     const res = await trigger({
       url: MEMBER_DATA,
     });
-    console.log(res.data);
     if (Array.isArray(res.data)) {
       const filtered = res.data.filter(
         (user) => user.user_member_type == userTypeFilter
@@ -51,7 +49,6 @@ const MemberList = ({ title, userTypeFilter }) => {
   const handleToggleStatus = async (user) => {
     try {
       const newStatus = user.is_active == "active" ? "inactive" : "active";
-      console.log(newStatus);
       const res = await trigger({
         url: `${UPDATE_USER_STATUS}/${user.id}`,
         method: "put",

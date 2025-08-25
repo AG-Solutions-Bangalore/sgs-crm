@@ -41,10 +41,7 @@ const EventDetailsPage = () => {
     if (eventDetails) {
       setEvent(eventDetails);
 
-      // Simulate submit / check-in API call here
-      console.log(`Scan submitted successfully for eventId: ${eventId}`);
 
-      // You can replace console.log with real API call as needed
     } else {
       setEvent(null);
     }

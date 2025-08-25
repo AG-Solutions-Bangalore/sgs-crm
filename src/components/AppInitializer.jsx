@@ -3,14 +3,14 @@ import CryptoJS from "crypto-js";
 import { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
-import { COMPANY_DATA, DOT_ENV, PANEL_CHECK } from "../api";
+import { DOT_ENV, PANEL_CHECK } from "../api";
 import usetoken from "../api/usetoken";
 import { useApiMutation } from "../hooks/useApiMutation";
+import useLogout from "../hooks/useLogout";
 import { logout } from "../store/auth/authSlice";
+import { setCompanyDetails, setCompanyImage } from "../store/auth/companySlice";
 import { setShowUpdateDialog } from "../store/auth/versionSlice";
 import { persistor } from "../store/store";
-import useLogout from "../hooks/useLogout";
-import { setCompanyDetails, setCompanyImage } from "../store/auth/companySlice";
 
 const secretKey = import.meta.env.VITE_SECRET_KEY;
 const validationKey = import.meta.env.VITE_SECRET_VALIDATION;
@@ -24,7 +24,6 @@ const AppInitializer = ({ children }) => {
   const location = useLocation();
   const dispatch = useDispatch();
   const localVersion = useSelector((state) => state.auth?.version);
-  const hasFetchedCompany = useRef(false);
 
   useEffect(() => {
     const validateEnvironment = async () => {

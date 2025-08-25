@@ -17,13 +17,11 @@ import dayjs from "dayjs";
 import { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { EVENT_REPORT } from "../../../api";
-import useToken from "../../../api/usetoken";
 import { exportEventReportToExcel } from "../../../components/exportExcel/exportEventReportToExcel";
 import { downloadPDF } from "../../../components/pdfExport/pdfExport";
 import { useApiMutation } from "../../../hooks/useApiMutation";
 const EventReport = () => {
   const { message } = App.useApp();
-  const token = useToken();
   const [form] = Form.useForm();
   const { trigger: submitTrigger, loading: isMutating } = useApiMutation();
   const [event, setEvent] = useState([]);
@@ -42,10 +40,6 @@ const EventReport = () => {
         url: EVENT_REPORT,
         method: "post",
         data: payload,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
       });
       if (res.code === 201) {
         setEvent(res.data);

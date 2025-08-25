@@ -1,13 +1,11 @@
+import { Form, message, Spin } from "antd";
 import { useEffect, useState } from "react";
-import { useApiMutation } from "../../hooks/useApiMutation";
-import { PROFILE, UPDATE_PROFILE } from "../../api";
-import { message, Form, Spin } from "antd";
 import { useNavigate } from "react-router-dom";
+import { PROFILE, UPDATE_PROFILE } from "../../api";
 import ProfileForm from "../../components/user/ProfileForm";
-import useToken from "../../api/usetoken";
+import { useApiMutation } from "../../hooks/useApiMutation";
 
 const UserPage = () => {
-  const token = useToken();
   const { trigger: fetchTrigger, loading: fetchloading } = useApiMutation();
   const { trigger: submitTrigger, loading: submitloading } = useApiMutation();
   const [form] = Form.useForm();
@@ -21,7 +19,6 @@ const UserPage = () => {
   const fetchProfile = async () => {
     const res = await fetchTrigger({
       url: PROFILE,
-      headers: { Authorization: `Bearer ${token}` },
     });
 
     const userData = res?.data || {};
@@ -52,18 +49,6 @@ const UserPage = () => {
   useEffect(() => {
     fetchProfile();
   }, []);
-
-  // const handleAddressChange = (index, field, value) => {
-  //   const updated = [...addressForms];
-  //   if (field === "is_default" && value === true) {
-  //     updated.forEach((_, i) => {
-  //       updated[i].is_default = i === index;
-  //     });
-  //   } else {
-  //     updated[index][field] = value;
-  //   }
-  //   setAddressForms(updated);
-  // };
   const handleAddressChange = (index, field, value) => {
     const updated = [...addressForms];
     if (field === "is_default" && value === true) {

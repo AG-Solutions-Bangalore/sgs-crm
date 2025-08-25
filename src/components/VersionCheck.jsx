@@ -1,10 +1,10 @@
+import { ReloadOutlined } from "@ant-design/icons";
+import { Button, Modal, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, Button, Typography, Space } from "antd";
-import { ReloadOutlined } from "@ant-design/icons";
+import usetoken from "../api/usetoken";
 import useLogout from "../hooks/useLogout";
 import { setShowUpdateDialog } from "../store/auth/versionSlice";
-import usetoken from "../api/usetoken";
 
 const { Text, Title } = Typography;
 

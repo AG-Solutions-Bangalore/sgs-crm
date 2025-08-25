@@ -1,13 +1,11 @@
 import { App, Button, Card, Form, Input, Modal } from "antd";
-import { PANEL_CHANGE_PASSWORD } from "../../api";
-import usetoken from "../../api/usetoken";
-import { useApiMutation } from "../../hooks/useApiMutation";
 import { useSelector } from "react-redux";
+import { PANEL_CHANGE_PASSWORD } from "../../api";
+import { useApiMutation } from "../../hooks/useApiMutation";
 
 const ChangePassword = ({ open, setOpenDialog }) => {
   const { message } = App.useApp();
   const [form] = Form.useForm();
-  const token = usetoken();
   const { trigger: SubmitTrigger, loading: submitloading } = useApiMutation();
 
   const username = useSelector((state) => state.auth?.user?.mobile || "");
@@ -24,10 +22,10 @@ const ChangePassword = ({ open, setOpenDialog }) => {
         url: PANEL_CHANGE_PASSWORD,
         method: "post", 
         data: payload,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
+        // headers: {
+        //   Authorization: `Bearer ${token}`,
+        //   "Content-Type": "application/json",
+        // },
       });
 
       if (response.code === 201) {

@@ -8,22 +8,19 @@ import {
 } from "@ant-design/icons";
 import { Card, Spin, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { DASHBOARD } from "../../api";
-import useToken from "../../api/usetoken";
-import { useApiMutation } from "../../hooks/useApiMutation";
 import { useNavigate } from "react-router-dom";
+import { DASHBOARD } from "../../api";
+import { useApiMutation } from "../../hooks/useApiMutation";
 const { Title } = Typography;
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const { trigger, loading: isMutating } = useApiMutation();
-  const token = useToken();
 
   const fetchDashboard = async () => {
     const res = await trigger({
       url: DASHBOARD,
-      headers: { Authorization: `Bearer ${token}` },
     });
     if (res?.code == 201) {
       setData(res);
@@ -93,7 +90,9 @@ const Dashboard = () => {
               <Card
                 key={index}
                 className="shadow-md rounded-xl hover:shadow-lg transition duration-300 cursor-pointer"
-                bodyStyle={{ padding: "16px" }}
+                styles={{
+                  body: { padding: "16px" },
+                }}
                 onClick={() => navigate(item.path)}
               >
                 <div className="flex flex-col items-center justify-center space-y-2 text-center">

@@ -4,18 +4,16 @@ import {
   PrinterOutlined,
 } from "@ant-design/icons";
 import { Button, Card, Image, Select, Spin, Tooltip } from "antd";
+import dayjs from "dayjs";
 import { useEffect, useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import { MEMBER_REPORT } from "../../../api";
-import useToken from "../../../api/usetoken";
 import { exportMemberReportToExcel } from "../../../components/exportExcel/exportMemberReportToExcel";
 import { downloadPDF } from "../../../components/pdfExport/pdfExport";
 import { useApiMutation } from "../../../hooks/useApiMutation";
-import dayjs from "dayjs";
 const { Option } = Select;
 
 const MemberReport = ({ title, userTypeFilter }) => {
-  const token = useToken();
   const memberRef = useRef(null);
   const [member, setMember] = useState([]);
   const [filteredMember, setFilteredMember] = useState([]);
@@ -30,9 +28,7 @@ const MemberReport = ({ title, userTypeFilter }) => {
         const res = await fetchCategoryReport({
           url: MEMBER_REPORT,
           method: "post",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+  
         });
 
         if (res.code === 201) {

@@ -31,7 +31,6 @@ export default function Navbar({ collapsed, onToggle }) {
       try {
         await logout();
       } catch (error) {
-        console.log("Logout error:", error);
       }
     } else if (key === "profile") {
       naviagte("/user-form");
@@ -42,15 +41,15 @@ export default function Navbar({ collapsed, onToggle }) {
 
   const profileMenu = {
     items: [
-      {
-        key: "profile",
-        label: (
-          <div className="flex items-center gap-2 px-2 py-2">
-            <UserOutlined className="text-teal-600" />
-            <span className="text-gray-800">Profile</span>
-          </div>
-        ),
-      },
+      // {
+      //   key: "profile",
+      //   label: (
+      //     <div className="flex items-center gap-2 px-2 py-2">
+      //       <UserOutlined className="text-teal-600" />
+      //       <span className="text-gray-800">Profile</span>
+      //     </div>
+      //   ),
+      // },
       {
         key: "chnagepassword",
         label: (

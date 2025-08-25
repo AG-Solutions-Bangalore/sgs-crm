@@ -2,95 +2,117 @@ import dayjs from "dayjs";
 import ExcelJS from "exceljs";
 import { saveAs } from "file-saver";
 
-export const exportNotRegisterNotScannedToExcel = async (data, title = "Report") => {
+export const exportNotRegisterNotScannedToExcel = async (
+  eventSummary,
+  participantData,
+  title = "Not_Register_NotScanned_Report"
+) => {
   const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet("Report");
+  const sheet = workbook.addWorksheet("Event Report");
 
-  // Define columns
-  const columns = [
-    { header: "Name", key: "event_name", width: 25 },
-    { header: "Allowed", key: "event_member_allowed", width: 25 },
-    { header: "No of Member", key: "event_no_member_allowed", width: 25 },
-    { header: "From Date", key: "event_from_date", width: 25 },
-    { header: "To Date", key: "event_to_date", width: 25 },
-    { header: "Payment", key: "event_payment", width: 25 },
-    { header: "Amount", key: "event_amount", width: 25 },
-    { header: "Total", key: "total_people", width: 25 },
+  // ----- EVENT SUMMARY TITLE -----
+  sheet.mergeCells(1, 1, 1, 2);
+  const summaryTitle = sheet.getCell("A1");
+  summaryTitle.value = title;
+  summaryTitle.font = { bold: true, size: 16 };
+  summaryTitle.alignment = { horizontal: "center", vertical: "middle" };
+  summaryTitle.fill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: {
+      argb: eventSummary.event_status === "Active" ? "C6EFCE" : "F8D7DA",
+    },
+  };
+  sheet.getRow(1).height = 25;
+
+  // 👉 Spacing row
+  sheet.addRow([]);
+
+  // ----- EVENT SUMMARY ROWS -----
+  const summaryRows = [
+    ["Name", eventSummary.event_name ?? ""],
+    ["Description", eventSummary.event_description ?? ""],
+    ["Member Allowed", eventSummary.event_member_allowed ?? ""],
+    ["No. of Member Allowed", eventSummary.event_no_member_allowed ?? ""],
+    [
+      "From Date",
+      eventSummary.event_from_date
+        ? dayjs(eventSummary.event_from_date).format("DD-MMM-YYYY")
+        : "-",
+    ],
+    [
+      "To Date",
+      eventSummary.event_to_date
+        ? dayjs(eventSummary.event_to_date).format("DD-MMM-YYYY")
+        : "-",
+    ],
+    ["Payment", eventSummary.event_payment === "Yes" ? "Yes" : "No"],
   ];
-  worksheet.columns = columns;
 
-  const columnCount = columns.length;
+  // 👉 Only add Amount row if payment is Yes
+  if (eventSummary.event_payment === "Yes") {
+    summaryRows.push(["Amount", eventSummary.event_amount ?? ""]);
+  }
 
-  // ----- TITLE ROW -----
-  worksheet.mergeCells(1, 1, 1, columnCount);
-  const titleCell = worksheet.getCell("A1");
-  titleCell.value = title;
-  titleCell.font = { size: 16, bold: true };
-  titleCell.alignment = { horizontal: "center", vertical: "middle", indent: 1 };
-  titleCell.fill = {
+  summaryRows.push(["Status", eventSummary.event_status ?? ""]);
+
+  sheet.addRows(summaryRows);
+
+  // 👉 Keep summary area in 2 columns only
+  sheet.getColumn(1).width = 25;
+  sheet.getColumn(2).width = 50;
+  sheet.getColumn(1).font = { bold: true };
+
+  // 👉 Add spacing rows before participant table
+  sheet.addRow([]);
+  sheet.addRow([]);
+
+  // ----- PARTICIPANT TABLE HEADER -----
+  const tableHeader = [
+    "MID",
+    // "Payment Type",
+    // "Transaction",
+    // "No. of People",
+    "Name",
+    "Mobile",
+    "Member Type",
+  ];
+
+  const headerRow = sheet.addRow(tableHeader);
+  headerRow.font = { bold: true };
+  headerRow.alignment = { horizontal: "center", vertical: "middle" };
+  headerRow.fill = {
     type: "pattern",
     pattern: "solid",
     fgColor: { argb: "f3f4f6" },
   };
-  worksheet.getRow(1).height = 30;
+  headerRow.height = 20;
 
-  // ----- HEADER ROW -----
-  const headerRow = worksheet.getRow(2);
-  columns.forEach((col, index) => {
-    const cell = headerRow.getCell(index + 1);
-    cell.value = col.header;
-    cell.font = { bold: true };
-    cell.fill = {
-      type: "pattern",
-      pattern: "solid",
-      fgColor: { argb: "f3f4f6" },
-    };
-    cell.alignment = { horizontal: "center", vertical: "middle", indent: 1 };
-    worksheet.getColumn(index + 1).width = col.width;
-  });
-  headerRow.commit();
+  // 👉 Reset columns for table separately
+  sheet.columns = [
+    { key: "mid", width: 30 },
+    // { key: "payment", width: 30 },
+    // { key: "txn", width: 22 },
+    // { key: "people", width: 15 },
+    { key: "name", width: 25 },
+    { key: "mobile", width: 18 },
+    { key: "type", width: 18 },
+  ];
 
-  // ----- DATA ROWS -----
-  data.forEach((item, i) => {
-    const row = worksheet.getRow(i + 3);
-    const isActive = item.event_status == "Active";
-    row.getCell(1).value = item.event_name ?? "";
-    row.getCell(2).value = item.event_member_allowed ?? "";
-    row.getCell(3).value = item.event_no_member_allowed ?? "";
-    row.getCell(4).value = item.event_from_date
-      ? dayjs(item.event_from_date).format("DD-MMM-YYYY")
-      : "";
-    row.getCell(5).value = item.event_to_date
-      ? dayjs(item.event_to_date).format("DD-MMM-YYYY")
-      : "";
-    row.getCell(6).value = item.event_payment;
-    row.getCell(7).value = item.event_amount;
-    row.getCell(8).value = item.total_people;
-
-    for (let j = 1; j <= columnCount; j++) {
-      const cell = row.getCell(j);
-      cell.alignment = {
-        vertical: "middle",
-        horizontal: j === 3 ? "right" : "left",
-        indent: 1,
-        wrapText: true,
-      };
-    }
-
-    if (isActive) {
-      row.eachCell((cell) => {
-        cell.fill = {
-          type: "pattern",
-          pattern: "solid",
-          fgColor: { argb: "90EE90" },
-        };
-      });
-    }
-
-    row.commit();
+  // ----- PARTICIPANT DATA -----
+  participantData.forEach((item) => {
+    sheet.addRow({
+      mid: item.event_register_mid,
+      // payment: item.event_register_payment_type,
+      // txn: item.event_register_transaction,
+      // people: item.event_no_of_people,
+      name: item.name,
+      mobile: item.mobile,
+      type: item.user_member_type,
+    });
   });
 
   // ----- EXPORT -----
   const buffer = await workbook.xlsx.writeBuffer();
-  saveAs(new Blob([buffer]), `${title.replace(/\s+/g, "_")}.xlsx`);
+  saveAs(new Blob([buffer]), `${title}.xlsx`);
 };

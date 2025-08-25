@@ -18,8 +18,86 @@ import { useLocation, useNavigate } from "react-router-dom";
 import logo1 from "../assets/logo-1.png";
 import { setShowUpdateDialog } from "../store/auth/versionSlice";
 import useFinalUserImage from "./common/Logo";
+import { FileChartColumn } from "lucide-react";
 
-const getMenuItems = (collapsed) => {
+const getMenuItems = (collapsed, userTypeRaw) => {
+  const uType = Number(userTypeRaw);
+  const isOnlyEventMode = uType === 2;
+
+  // --- Common building blocks ---
+  const eventChildren = [
+    { key: "/event", icon: <SolutionOutlined />, label: "Event" },
+    { key: "/event-register", icon: <TagsOutlined />, label: "Event Register" },
+    { key: "/event-track", icon: <CarOutlined />, label: "Event Track" },
+  ];
+
+  const eventReportChildren = [
+    { key: "/report-event", icon: <CarOutlined />, label: "Event" },
+    {
+      key: "/report-event-details",
+      icon: <CarOutlined />,
+      label: "Event Details",
+    },
+    {
+      key: "/report-register-notscanned",
+      icon: <CarOutlined />,
+      label: "Registered Not Scanned",
+    },
+    {
+      key: "/report-notregister-notscanned",
+      icon: <CarOutlined />,
+      label: "Not Registered Not Scanned",
+    },
+  ];
+
+  // --- userType == 2 → ONLY Event + Event Report ---
+  if (isOnlyEventMode) {
+    if (collapsed) {
+      return [
+        {
+          key: "sub1",
+          icon: <MailOutlined />,
+          label: <span id="report-scroll-anchor">Event</span>,
+          children: eventChildren,
+        },
+        {
+          key: "sub2",
+          icon: <BarChartOutlined />,
+          label: <span id="report-scroll-anchor">Report</span>,
+          children: eventReportChildren,
+        },
+      ];
+    }
+
+    return [
+      {
+        type: "group",
+        label: "Event",
+        children: [
+          {
+            key: "sub1",
+            icon: <MailOutlined />,
+            label: "Event",
+            children: eventChildren,
+          },
+        ],
+      },
+      {
+        type: "group",
+        label: "Report",
+        children: [
+          {
+            key: "sub2",
+            icon: <BarChartOutlined />,
+            label: "Report",
+            children: eventReportChildren,
+          },
+        ],
+      },
+    ];
+  }
+
+  // --- All other userTypes → FULL MENU (include Event too) ---
   const dashboardItems = [
     { key: "/home", icon: <HomeOutlined />, label: "Dashboard" },
     {
@@ -29,16 +107,6 @@ const getMenuItems = (collapsed) => {
     },
   ];
 
-  const eventChildren = [
-    {
-      key: "/event",
-      icon: <SolutionOutlined />,
-      label: "Event",
-    },
-    { key: "/event-register", icon: <TagsOutlined />, label: "Event Register" },
-
-    { key: "/event-track", icon: <CarOutlined />, label: "Event Track" },
-  ];
   const managementChildren = [
     { key: "/life-member", icon: <LockOutlined />, label: "Life Membership" },
     {
@@ -48,11 +116,13 @@ const getMenuItems = (collapsed) => {
     },
     { key: "/truste-member", icon: <CarOutlined />, label: "Trustee" },
   ];
-  const reportItemsChildren = [
+
+  const fullReportChildren = [
     {
       key: "sales-submenu",
       icon: <ProfileOutlined />,
-      label: "Member",
+      // label: "Member",
+      label: <span id="report-scroll-anchor">Member</span>,
       children: [
         {
           key: "/report-life-member",
@@ -71,34 +141,12 @@ const getMenuItems = (collapsed) => {
         },
       ],
     },
-
-    {
-      key: "/report-event",
-      icon: <CarOutlined />,
-      label: "Event",
-    },
-
-    {
-      key: "/report-event-details",
-      icon: <CarOutlined />,
-      label: "Event Details",
-    },
-    {
-      key: "/report-register-notscanned",
-      icon: <CarOutlined />,
-      label: "Registered Not Scanned",
-    },
-    {
-      key: "/report-notregister-notscanned",
-      icon: <CarOutlined />,
-      label: "Not Registered Not Scanned",
-    },
+    ...eventReportChildren,
   ];
 
   if (collapsed) {
     return [
       ...dashboardItems,
-
       {
         key: "sub",
         icon: <MailOutlined />,
@@ -108,24 +156,20 @@ const getMenuItems = (collapsed) => {
       {
         key: "sub1",
         icon: <MailOutlined />,
-        label: <span id="report-scroll-anchor">Event</span>,
+        label: "Event",
         children: eventChildren,
-      },
+      }, // ✅ Added Event here
       {
         key: "sub2",
         icon: <BarChartOutlined />,
         label: <span id="report-scroll-anchor">Report</span>,
-        children: reportItemsChildren,
+        children: fullReportChildren,
       },
     ];
   }
 
   return [
-    {
-      type: "group",
-      label: "Dashboard",
-      children: dashboardItems,
-    },
+    { type: "group", label: "Dashboard", children: dashboardItems },
     {
       type: "group",
       label: "Member",
@@ -145,7 +189,7 @@ const getMenuItems = (collapsed) => {
         {
           key: "sub1",
           icon: <MailOutlined />,
-          label: <span id="report-scroll-anchor">Event</span>,
+          label: "Event",
           children: eventChildren,
         },
       ],
@@ -157,8 +201,8 @@ const getMenuItems = (collapsed) => {
         {
           key: "sub2",
           icon: <BarChartOutlined />,
-          label: <span id="report-scroll-anchor">Report</span>,
-          children: reportItemsChildren,
+          label: "Report",
+          children: fullReportChildren,
         },
       ],
     },
@@ -172,12 +216,12 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
     if (path.startsWith("/report-")) return ["sub2"];
     return [];
   };
-
+  const userType = useSelector((state) => state.auth?.user?.user_type);
   const [openKeys, setOpenKeys] = useState(() =>
     getOpenKeysFromPath(location.pathname)
   );
   const naviagte = useNavigate();
-  const items = getMenuItems(collapsed);
+  const items = getMenuItems(collapsed, Number(userType));
   const dispatch = useDispatch();
   const finalUserImage = useFinalUserImage();
   const [delayedCollapse, setDelayedCollapse] = useState(collapsed);
@@ -329,7 +373,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 23-08-2025
+                    Updated on: 25-08-2025
                   </div>
                 </div>
               }

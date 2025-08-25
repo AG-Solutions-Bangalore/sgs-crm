@@ -5,6 +5,8 @@ import { PANEL_SEND_PASSWORD } from "../../api";
 import useFinalUserImage from "../../components/common/Logo";
 import { useApiMutation } from "../../hooks/useApiMutation";
 const { Title } = Typography;
+import logo from "../../assets/logo-1.png";
+import bgSignin from "../../assets/bg-sigin.png";
 
 const ForgotPassword = () => {
   const [form] = Form.useForm();
@@ -42,7 +44,10 @@ const ForgotPassword = () => {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center ">
+      <div
+        className="min-h-screen flex items-center justify-center "
+        style={{ backgroundImage: `url(${bgSignin})` }}
+      >
         <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 backdrop-blur-md p-6 m-4 overflow-hidden">
           {/* Left Side - Login Form */}
           <div className="flex flex-col justify-center px-6 py-8">
@@ -79,7 +84,7 @@ const ForgotPassword = () => {
                   { required: true, message: "Please enter your username" },
                 ]}
               >
-                <Input size="large" placeholder="Enter username" />
+                <Input size="large" placeholder="Enter username" autoFocus />
               </Form.Item>
 
               <Form.Item
@@ -115,9 +120,9 @@ const ForgotPassword = () => {
 
           <div className="hidden md:flex items-center justify-center">
             <img
-              src="https://img.freepik.com/free-vector/shop-with-sign-we-are-open_23-2148562563.jpg?ga=GA1.1.70886028.1749460191&semt=ais_hybrid&w=740"
+              src={logo}
               alt="Login Illustration"
-              className="w-full h-full object-cover rounded-md"
+              className="w-60 h-60 object-contain rounded-md"
             />
           </div>
         </div>

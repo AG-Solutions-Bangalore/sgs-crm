@@ -7,7 +7,7 @@ import { useApiMutation } from "../../hooks/useApiMutation";
 import { setCredentials } from "../../store/auth/authSlice";
 import logo from "../../assets/logo-1.png";
 const { Title } = Typography;
-
+import bgSignin from "../../assets/bg-sigin.png";
 const SignIn = () => {
   const { message } = App.useApp();
   const [form] = Form.useForm();
@@ -61,7 +61,10 @@ const SignIn = () => {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center ">
+      <div
+        className="min-h-screen flex items-center justify-center"
+        style={{ backgroundImage: `url(${bgSignin})` }}
+      >
         <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 backdrop-blur-md p-6 m-4 overflow-hidden">
           <div className="flex flex-col justify-center px-6 py-8">
             <div className="text-center mb-6">
@@ -105,6 +108,11 @@ const SignIn = () => {
                 rules={[
                   { required: true, message: "Please enter your password" },
                 ]}
+                label={
+                  <span>
+                    Password <span className="text-red-500">*</span>
+                  </span>
+                }
               >
                 <Input.Password size="large" placeholder="Enter password" />
               </Form.Item>

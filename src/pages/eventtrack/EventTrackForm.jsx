@@ -120,7 +120,7 @@ const EventTrackForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                       { required: true, message: "Event Id is required" },
                     ]}
                   >
-                    <Input maxLength={10} />
+                    <Input maxLength={10} autoFocus />
                   </Form.Item>
                   <Form.Item label="Entry Date" name="event_entry_date">
                     <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />
@@ -136,7 +136,7 @@ const EventTrackForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                 name="event_member_mid"
                 rules={[{ required: true, message: "Member mid is required" }]}
               >
-                <Input maxLength={10} />
+                <Input maxLength={10} autoFocus />
               </Form.Item>
               <Form.Item
                 label={

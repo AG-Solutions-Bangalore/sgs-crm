@@ -97,7 +97,7 @@ body {
 /* Scrollbar */
 .scrollbar-custom {
   overflow: auto;
-  scrollbar-width: thin;
+  /* scrollbar-width: thin; */
   scrollbar-color: auto transparent;
 }
 
@@ -110,4 +110,10 @@ body {
 }
 .scrollbar-custom::-webkit-scrollbar-track {
   background: transparent;
+}
+.ant-menu-light.ant-menu-root.ant-menu-inline,
+.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-inline,
+.ant-menu-light.ant-menu-root.ant-menu-vertical,
+.ant-menu-light > .ant-menu.ant-menu-root.ant-menu-vertical {
+  border-inline-end: none !important;
 }

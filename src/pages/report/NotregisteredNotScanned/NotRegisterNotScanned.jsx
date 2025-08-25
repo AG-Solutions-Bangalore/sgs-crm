@@ -16,6 +16,7 @@ import { exportEventDetailsReportToExcel } from "../../../components/exportExcel
 import { downloadPDF } from "../../../components/pdfExport/pdfExport";
 import { useApiMutation } from "../../../hooks/useApiMutation";
 import EventCard from "../EventDetailsReport/EventCard";
+import { exportNotRegisterNotScannedToExcel } from "../../../components/exportExcel/exportNotRegisterNotScannedToExcel.";
 const NotRegisterNotScanned = () => {
   const { message } = App.useApp();
   const [form] = Form.useForm();
@@ -111,7 +112,7 @@ const NotRegisterNotScanned = () => {
               shape="circle"
               icon={<FileExcelOutlined />}
               onClick={() =>
-                exportEventDetailsReportToExcel(
+                exportNotRegisterNotScannedToExcel(
                   eventdetails,
                   eventdetailsData,
                   "Not_Register_Not_Scanned"
@@ -186,9 +187,9 @@ const NotRegisterNotScanned = () => {
                 <thead className="bg-gray-100">
                   <tr>
                     <th className="px-3 py-2 text-center ">MID</th>
-                    <th className="px-3 py-2 text-center ">Payment Type</th>
+                    {/* <th className="px-3 py-2 text-center ">Payment Type</th>
                     <th className="px-3 py-2 text-center ">Transaction</th>
-                    <th className="px-3 py-2 text-center ">No of People</th>
+                    <th className="px-3 py-2 text-center ">No of People</th> */}
                     <th className="px-3 py-2 text-center ">Name</th>
                     <th className="px-3 py-2 text-center">Mobile</th>
                     <th className="px-3 py-2 text-center  ">Member Type</th>
@@ -208,7 +209,7 @@ const NotRegisterNotScanned = () => {
                       <td className="px-3 py-2 text-center">
                         {item.event_register_mid}
                       </td>
-                      <td className="px-3 py-2 text-center">
+                      {/* <td className="px-3 py-2 text-center">
                         {item.event_register_payment_type}
                       </td>
                       <td className="px-3 py-2 text-center">
@@ -216,7 +217,7 @@ const NotRegisterNotScanned = () => {
                       </td>
                       <td className="px-3 py-2 text-center">
                         {item.event_no_of_people}
-                      </td>{" "}
+                      </td>{" "} */}
                       <td className="px-3 py-2 text-center">{item.name}</td>
                       <td className="px-3 py-2 text-center ">{item.mobile}</td>
                       <td className="px-3 py-2 text-center ">

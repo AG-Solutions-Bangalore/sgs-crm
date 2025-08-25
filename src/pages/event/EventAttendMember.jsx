@@ -16,13 +16,14 @@ import { EVENT, EVENT_TRACK, REGESTRATION_DATA } from "../../api";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
 import EventTrackForm from "../eventtrack/EventTrackForm";
+import { useSelector } from "react-redux";
 const { Search } = Input;
 const EventAttendMember = () => {
   const { id } = useParams();
   const { message } = App.useApp();
   const [openDialog, setOpenDialog] = useState(false);
   const [eventId, setEventId] = useState(null);
-
+  const userType = useSelector((state) => state.auth?.user?.user_type);
   const [searchTerm, setSearchTerm] = useState("");
   const { trigger, loading: isMutating } = useApiMutation();
   const [users, setUsers] = useState([]);
@@ -142,21 +143,23 @@ const EventAttendMember = () => {
                 onClick={() => handleEdit(user)}
               />
             </Tooltip>
-            <Tooltip title="Delete Attend Member">
-              <Popconfirm
-                title="Are you sure you want to delete this attend member?"
-                onConfirm={() => handleDelete(user.id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button
-                  icon={<DeleteOutlined />}
-                  size="small"
-                  type="primary"
-                  danger
-                />
-              </Popconfirm>
-            </Tooltip>
+            {(userType == "3" || userType == "4") && (
+              <Tooltip title="Delete Attend Member">
+                <Popconfirm
+                  title="Are you sure you want to delete this attend member?"
+                  onConfirm={() => handleDelete(user.id)}
+                  okText="Yes"
+                  cancelText="No"
+                >
+                  <Button
+                    icon={<DeleteOutlined />}
+                    size="small"
+                    type="primary"
+                    danger
+                  />
+                </Popconfirm>
+              </Tooltip>
+            )}
           </Space>
         );
       },

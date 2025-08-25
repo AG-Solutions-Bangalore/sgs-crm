@@ -1,16 +1,5 @@
-import {
-  EditOutlined,
-  PlusOutlined
-} from "@ant-design/icons";
-import {
-  App,
-  Button,
-  Card,
-  Input,
-  Space,
-  Spin,
-  Tooltip
-} from "antd";
+import { EditOutlined } from "@ant-design/icons";
+import { Button, Card, Input, Space, Spin, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { EVENT_TRACK } from "../../api";
@@ -19,8 +8,6 @@ import { useApiMutation } from "../../hooks/useApiMutation";
 import EventTrackForm from "./EventTrackForm";
 const { Search } = Input;
 const EventTrackList = () => {
-  const { message } = App.useApp();
-
   const [openDialog, setOpenDialog] = useState(false);
   const [eventId, setEventId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,27 +31,6 @@ const EventTrackList = () => {
   const handleEdit = (user) => {
     setEventId(user.id);
     setOpenDialog(true);
-  };
-
-  // const handleAddUser = () => {
-  //   setEventId(null);
-  //   setOpenDialog(true);
-  // };
-  const handleDelete = async (user) => {
-    try {
-      const res = await trigger({
-        url: `${EVENT_TRACK}/${user.event_id}`,
-        method: "delete",
-      });
-
-      if (res?.code === 201) {
-        message.success(res.message || "Deleted event successfully.");
-      } else {
-        message.error(res.message || "Failed to deleted event.");
-      }
-    } catch (error) {
-      message.error(error.message || "Error deleted event.");
-    }
   };
   const highlightMatch = (text, match) => {
     if (!match || !text) return text;
@@ -132,7 +98,6 @@ const EventTrackList = () => {
       render: (_, user) => {
         return (
           <Space>
-       
             <Tooltip title="Edit User">
               <Button
                 type="primary"
@@ -141,21 +106,7 @@ const EventTrackList = () => {
                 onClick={() => handleEdit(user)}
               />
             </Tooltip>
-            {/* <Tooltip title="Delete Event Track">
-              <Popconfirm
-                title="Are you sure you want to delete this event track?"
-                onConfirm={() => handleDelete(user)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button
-                  icon={<DeleteOutlined />}
-                  size="small"
-                  type="primary"
-                  danger
-                />
-              </Popconfirm>
-            </Tooltip> */}
+           
           </Space>
         );
       },
@@ -215,7 +166,6 @@ const EventTrackList = () => {
         fetchEvents={fetchUser}
         EVENT_DATA={EVENT_TRACK}
       />
-
     </Card>
   );
 };

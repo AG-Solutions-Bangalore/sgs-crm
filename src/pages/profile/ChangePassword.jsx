@@ -58,7 +58,7 @@ const ChangePassword = ({ open, setOpenDialog }) => {
       onCancel={() => setOpenDialog(false)}
       width={800}
     >
-      <h2 className="text-2xl font-bold text-[#006666]">Change Password</h2>
+      <h2 className="text-2xl font-bold text-[#fb6332]">Change Password</h2>
 
       <Card>
         <Form

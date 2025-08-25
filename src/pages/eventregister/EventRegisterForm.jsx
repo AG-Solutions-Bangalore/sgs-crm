@@ -138,7 +138,7 @@ const EventRegisterForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                       { required: true, message: "Register name is required" },
                     ]}
                   >
-                    <Input maxLength={50} />
+                    <Input maxLength={50} autoFocus />
                   </Form.Item>
                   <Form.Item
                     label={
@@ -216,7 +216,7 @@ const EventRegisterForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                   { required: true, message: "Register mid is required" },
                 ]}
               >
-                <Input maxLength={10} />
+                <Input maxLength={10} autoFocus />
               </Form.Item>
               <Form.Item
                 name="event_register_payment_type"

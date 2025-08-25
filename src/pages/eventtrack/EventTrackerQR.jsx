@@ -43,7 +43,7 @@ const EventMidScanner = ({
 
       if (res.code === 201) {
         message.success(res.message || "Event saved!");
-        setOpenQrDialog(false);
+        // setOpenQrDialog(false);
       } else {
         message.error(res.message || "Failed to save event.");
       }

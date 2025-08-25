@@ -12,6 +12,7 @@ import { exportEventDetailsReportToExcel } from "../../../components/exportExcel
 import { downloadPDF } from "../../../components/pdfExport/pdfExport";
 import { useApiMutation } from "../../../hooks/useApiMutation";
 import EventCard from "../EventDetailsReport/EventCard";
+import { exportRegisterNotScannedToExcel } from "../../../components/exportExcel/exportRegisterNotScannedToExcel";
 const RegisteredNotScanned = () => {
   const { message } = App.useApp();
   const [form] = Form.useForm();
@@ -107,7 +108,7 @@ const RegisteredNotScanned = () => {
               shape="circle"
               icon={<FileExcelOutlined />}
               onClick={() =>
-                exportEventDetailsReportToExcel(
+                exportRegisterNotScannedToExcel(
                   eventdetails,
                   eventdetailsData,
                   "Register_NotScanned_Report"
@@ -184,7 +185,7 @@ const RegisteredNotScanned = () => {
                     <th className="px-3 py-2 text-center ">MID</th>
                     <th className="px-3 py-2 text-center ">Payment Type</th>
                     <th className="px-3 py-2 text-center ">Transaction</th>
-                    <th className="px-3 py-2 text-center ">No of People</th>
+                    {/* <th className="px-3 py-2 text-center ">No of People</th> */}
                     <th className="px-3 py-2 text-center ">Name</th>
                     <th className="px-3 py-2 text-center">Mobile</th>
                     <th className="px-3 py-2 text-center  ">Member Type</th>
@@ -210,9 +211,9 @@ const RegisteredNotScanned = () => {
                       <td className="px-3 py-2 text-center">
                         {item.event_register_transaction}
                       </td>
-                      <td className="px-3 py-2 text-center">
+                      {/* <td className="px-3 py-2 text-center">
                         {item.event_no_of_people}
-                      </td>{" "}
+                      </td>{" "} */}
                       <td className="px-3 py-2 text-center">{item.name}</td>
                       <td className="px-3 py-2 text-center ">{item.mobile}</td>
                       <td className="px-3 py-2 text-center ">

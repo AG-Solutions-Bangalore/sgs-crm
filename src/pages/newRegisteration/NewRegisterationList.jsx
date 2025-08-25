@@ -26,6 +26,7 @@ import {
 import AvatarCell from "../../components/common/AvatarCell";
 import SGSTable from "../../components/STTable/STTable";
 import { useApiMutation } from "../../hooks/useApiMutation";
+import { useSelector } from "react-redux";
 
 const { Search } = Input;
 
@@ -52,6 +53,7 @@ const highlightMatch = (text, match) => {
 };
 
 const NewRegisterationList = () => {
+  const userType = useSelector((state) => state.auth?.user?.user_type);
   const { message } = App.useApp();
   const [searchTerm, setSearchTerm] = useState("");
   const { trigger, loading: isMutating } = useApiMutation();
@@ -245,21 +247,23 @@ const NewRegisterationList = () => {
               onClick={() => handleEdit(id)}
             />
           </Tooltip>
-          <Tooltip title="Delete New Registration ">
-            <Popconfirm
-              title="Are you sure you want to delete this user?"
-              onConfirm={() => handleDelete(id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button
-                icon={<DeleteOutlined />}
-                size="small"
-                type="primary"
-                danger
-              />
-            </Popconfirm>
-          </Tooltip>
+          {(userType == "3" || userType == "4") && (
+            <Tooltip title="Delete New Registration ">
+              <Popconfirm
+                title="Are you sure you want to delete this user?"
+                onConfirm={() => handleDelete(id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button
+                  icon={<DeleteOutlined />}
+                  size="small"
+                  type="primary"
+                  danger
+                />
+              </Popconfirm>
+            </Tooltip>
+          )}
           <Tooltip title="Convert">
             <Popconfirm
               title="Are you sure you need to convert?"

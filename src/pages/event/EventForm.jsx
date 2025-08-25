@@ -251,7 +251,7 @@ const EventForm = ({ open, setOpenDialog, eventId, fetchEvents }) => {
                 name="event_name"
                 rules={[{ required: true, message: "Event Name is required" }]}
               >
-                <Input maxLength={50} />
+                <Input maxLength={50} autoFocus/>
               </Form.Item>
 
               <Form.Item

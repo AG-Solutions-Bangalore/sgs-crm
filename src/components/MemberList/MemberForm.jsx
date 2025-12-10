@@ -60,7 +60,7 @@ const NewRegisterationForm = () => {
         user_full_name: member.name,
         user_mobile: member.mobile,
         user_email: member.email,
-        user_status: member.is_active,
+        user_status: member.is_active == "active" ? true : false,
         user_card_print: member.user_card_print == "Yes" ? true : false,
         user_card_re_print: member.user_card_re_print == "Yes" ? true : false,
       };
@@ -161,7 +161,7 @@ const NewRegisterationForm = () => {
       });
       if (res.code == 201) {
         message.success(res.message || "Member Updated!");
-        navigate("/life-member");
+        navigate(-1);
       } else {
         message.error(res.message || "Failed to save member.");
       }

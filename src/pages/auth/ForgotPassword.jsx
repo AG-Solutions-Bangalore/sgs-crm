@@ -45,85 +45,97 @@ const ForgotPassword = () => {
   return (
     <>
       <div
-        className="min-h-screen flex items-center justify-center "
-        style={{ backgroundImage: `url(${bgSignin})` }}
+        className="min-h-screen flex items-center justify-center px-4"
+        style={{
+          backgroundImage: `url(${bgSignin})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
-        <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 backdrop-blur-md p-6 m-4 overflow-hidden">
-          {/* Left Side - Login Form */}
-          <div className="flex flex-col justify-center px-6 py-8">
-            <div className="text-center mb-6">
-              <img
-                src={finalUserImage || ""}
-                alt="Logo"
-                className="h-20 mx-auto"
-              />
-              <Title level={3} className="text-gray-800">
-                Reset Your Password
-              </Title>
-            </div>
-
-            <Form
-              form={form}
-              layout="vertical"
-              onFinish={onFinish}
-              className="w-full"
-              initialValues={{
-                username: "",
-                email: "",
-              }}
-              requiredMark={false}
-            >
-              <Form.Item
-                label={
-                  <span>
-                    Username <span className="text-red-500">*</span>
-                  </span>
-                }
-                name="username"
-                rules={[
-                  { required: true, message: "Please enter your username" },
-                ]}
-              >
-                <Input size="large" placeholder="Enter username" autoFocus />
-              </Form.Item>
-
-              <Form.Item
-                label={
-                  <span>
-                    Email <span className="text-red-500">*</span>
-                  </span>
-                }
-                name="email"
-                rules={[{ required: true, message: "Please enter your email" }]}
-              >
-                <Input size="large" placeholder="Enter Email" type="email" />
-              </Form.Item>
-
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  block
-                >
-                  {loading ? "Checking..." : "Reset Password"}
-                </Button>
-              </Form.Item>
-
-              <div className="text-right">
-                <Link to="/" className="text-sm text-blue-600 hover:underline">
-                  Sigin?
-                </Link>
-              </div>
-            </Form>
+        <div className="w-full max-w-md bg-white/80 backdrop-blur-xl shadow-xl border border-orange-200 rounded-2xl p-8 animate-fadeIn">
+          {/* Logo */}
+          <div className="text-center mb-6">
+            <img
+              src={finalUserImage || ""}
+              alt="Logo"
+              className="h-20 mx-auto mb-3"
+            />
+            <h2 className="text-2xl font-semibold text-gray-800 tracking-wide">
+              Reset Your Password
+            </h2>
+            <p className="text-gray-500 text-sm mt-1">
+              Enter your username & email to continue
+            </p>
           </div>
 
-          <div className="hidden md:flex items-center justify-center">
-            <img
-              src={logo}
-              alt="Login Illustration"
-              className="w-60 h-60 object-contain rounded-md"
-            />
+          {/* Form */}
+          <Form
+            layout="vertical"
+            form={form}
+            onFinish={onFinish}
+            requiredMark={false}
+            initialValues={{
+              username: "",
+              email: "",
+            }}
+          >
+            <Form.Item
+              label={
+                <span className="font-medium text-gray-700">
+                  Username <span className="text-red-500">*</span>
+                </span>
+              }
+              name="username"
+              rules={[
+                { required: true, message: "Please enter your username" },
+              ]}
+            >
+              <Input
+                size="large"
+                placeholder="Enter username"
+                className="!border-orange-300 focus:!border-orange-500 focus:!ring-2 focus:!ring-orange-300 rounded-lg"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={
+                <span className="font-medium text-gray-700">
+                  Email <span className="text-red-500">*</span>
+                </span>
+              }
+              name="email"
+              rules={[{ required: true, message: "Please enter your email" }]}
+            >
+              <Input
+                size="large"
+                type="email"
+                placeholder="Enter email"
+                className="!border-orange-300 focus:!border-orange-500 focus:!ring-2 focus:!ring-orange-300 rounded-lg"
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                block
+                size="large"
+                className="!bg-orange-500 hover:!bg-orange-600 !border-none rounded-lg font-medium"
+              >
+                {loading ? "Checking..." : "Reset Password"}
+              </Button>
+            </Form.Item>
+          </Form>
+
+          {/* Footer link */}
+          <div className="text-center mt-4">
+            <Link
+              to="/"
+              className="text-sm text-orange-600 hover:underline font-medium"
+            >
+              Back to Sign In
+            </Link>
           </div>
         </div>
       </div>

@@ -117,3 +117,57 @@ body {
 .ant-menu-light > .ant-menu.ant-menu-root.ant-menu-vertical {
   border-inline-end: none !important;
 }
+/* Purple Select Style */
+/* Ensure the class is applied to your Select */
+.purple-select {
+  --tw-rounded: 0.5rem; /* rounded-lg */
+}
+/* Selected option */
+.purple-select .ant-select-item-option-selected {
+  background-color: #fb6332 !important; /* orange brand */
+  color: white !important;
+  font-weight: 600;
+}
+
+/* Hover option */
+.purple-select .ant-select-item-option-active {
+  background-color: #fb6332 !important;
+  color: white !important;
+}
+
+/* Focus border + ring */
+.purple-select.ant-select-focused .ant-select-selector {
+  border-color: #fb924c !important; /* focus:border-orange-500 equivalent */
+  box-shadow: 0 0 0 2px rgba(251, 146, 60, 0.4) !important; /* ring-orange-300 */
+}
+
+/* Default border + rounded */
+.purple-select .ant-select-selector {
+  border-color: #fdba74 !important; /* border-orange-300 */
+  border-radius: 0.5rem !important; /* rounded-lg */
+}
+@layer utilities {
+  @keyframes movePattern {
+    0% {
+      background-position: 0 0, 15px 15px, 0 0;
+    }
+    50% {
+      background-position: 10px 10px, 25px 25px, 0 0;
+    }
+    100% {
+      background-position: 0 0, 15px 15px, 0 0;
+    }
+  }
+
+  .bg-pattern {
+    background-image: radial-gradient(
+        rgba(255, 255, 255, 0.15) 2px,
+        transparent 2px
+      ),
+      radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom right, #ff8259, #fb6332, #e54e1e);
+    background-size: 25px 25px, 35px 35px, 100% 100%;
+    background-position: 0 0, 15px 15px, 0 0;
+    animation: movePattern 10s linear infinite;
+  }
+}

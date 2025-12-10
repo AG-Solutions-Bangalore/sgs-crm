@@ -18,7 +18,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import logo1 from "../assets/logo-1.png";
 import { setShowUpdateDialog } from "../store/auth/versionSlice";
 import useFinalUserImage from "./common/Logo";
-import { FileChartColumn } from "lucide-react";
 
 const getMenuItems = (collapsed, userTypeRaw) => {
   const uType = Number(userTypeRaw);
@@ -373,7 +372,7 @@ export default function Sidebar({ collapsed, isMobile = false, onClose }) {
                     </span>
                   </div>
                   <div className="text-[11px] font-normal text-gray-500 mt-1">
-                    Updated on: 25-08-2025
+                    Updated on: 10-12-2025
                   </div>
                 </div>
               }

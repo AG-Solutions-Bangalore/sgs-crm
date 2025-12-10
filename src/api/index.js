@@ -18,6 +18,8 @@ export const EVENT = `/event`;
 export const EVENT_REGISTER = `/event-register`;
 //REGESTRATION_DATA
 export const REGESTRATION_DATA = `/member`;
+//REGESTRATION_OUT
+export const REGESTRATION_OUT = `/create-member`;
 //CONVERT_NEW_REGISTRATION_TO_MEMEBER
 export const CONVERT_NEW_REGISTRATION_TO_MEMEBER = `/panel-convert-new-registration-to-member`;
 //MEMBER_DATA

@@ -26,6 +26,7 @@ import NotRegisterNotScanned from "./pages/report/NotregisteredNotScanned/NotReg
 import RegisteredNotScanned from "./pages/report/registerednotscanned/RegisteredNotScanned";
 import MemberPage from "./pages/member/AllMemberPage";
 import NewRegisterationOut from "./pages/newRegisteration/NewRegisterOut";
+import ThankYouPage from "./components/common/ThankYouPage";
 
 function App() {
   return (
@@ -37,8 +38,12 @@ function App() {
         <Route path="/forget-password" element={<ForgotPassword />} />
         <Route path="/maintenance" element={<MaintenancePage />} />
         <Route
-          path="/new-registration-form"
+          path="/register-form"
           element={<NewRegisterationOut />}
+        />
+        <Route
+          path="/thank-you"
+          element={<ThankYouPage />}
         />
         {/* Protected Routes: All other paths */}
         <Route
